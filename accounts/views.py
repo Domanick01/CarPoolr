@@ -16,7 +16,7 @@ def login_view(request):
 
     # If the user is logged in it will redirect to the admin page
     if request.user.is_authenticated:
-        return redirect('/admin/')
+        return redirect('/home/')
 
     # This handles the submission
     if request.method == 'POST':
@@ -29,7 +29,7 @@ def login_view(request):
         if user is not None:
             login(request, user)
             messages.success(request, 'You are now logged in')
-            return redirect('/admin/')
+            return redirect('/home/')
         else:
             messages.error(request, 'Username or password is incorrect')
 
