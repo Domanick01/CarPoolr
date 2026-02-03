@@ -7,29 +7,27 @@ def home(request):
     '''Home view for the accounts app'''
     return render(request, 'accounts/home.html')
 
-# Create your views here.
 def login_view(request):
     """
     Login view for Week 1
     Authenticates Users
     """
-
-    # If the user is logged in it will redirect to the admin page
+    # If the user is logged in, redirect to home page
     if request.user.is_authenticated:
-        return redirect('/home/')
+        return redirect('home')  # Use URL name instead of hardcoded path
 
-    # This handles the submission
+    # This handles the POST submission
     if request.method == 'POST':
-        username = request.POST['username']
-        password = request.POST['password']
+        username = request.POST.get('username')  # .get() is safer than ['username']
+        password = request.POST.get('password')
 
         # Tries to authenticate the user
-        user = authenticate(username=username, password=password)
+        user = authenticate(request, username=username, password=password)
 
         if user is not None:
             login(request, user)
             messages.success(request, 'You are now logged in')
-            return redirect('/home/')
+            return redirect('home')  # Use URL name
         else:
             messages.error(request, 'Username or password is incorrect')
 
