@@ -1,6 +1,11 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate
 from django.contrib import messages
+
+
+def home(request):
+    '''Home view for the accounts app'''
+    return render(request, 'accounts/home.html')
 
 # Create your views here.
 def login_view(request):
