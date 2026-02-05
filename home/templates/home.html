@@ -31,7 +31,9 @@
 
     <button>Get Started</button>
 
-    <a href={% url "home" %}> <!-- The "home" needs to be replaced with the login url-->
+    <!-- For future refrence this is how a redirect works in django and was not working with just login in the
+    quotes so the app name should be specified if we continue using the same url pattern-->
+    <a href={% url "account:login" %}>
         <button>Log in</button>
     </a>
 
