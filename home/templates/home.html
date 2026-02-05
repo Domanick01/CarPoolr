@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600&display=swap" rel="stylesheet">
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+
+     <style>
+    body {
+      text-align: center;
+      font-family: Orbitron, sans-serif;
+    }
+
+    button {
+      padding: 10px 20px;
+      margin: 10px;
+    }
+  </style>
+</head>
+<body>
+
+    <nav>
+  <span>Home</span> | <span>About</span> | <span>Contact</span>
+    </nav>
+    <p> </p>
+    <h1>Carpoolr</h1>
+	<h2> Welcome to Carpoolr! </h2>
+
+    <button>Get Started</button>
+
+    <a href={% url "home" %}> <!-- The "home" needs to be replaced with the login url-->
+        <button>Log in</button>
+    </a>
+
+    <p>CarPoolr is designed to help college students by prioritizing safety while promoting a
+    positive and fun social environment.</p>
+
+</body>
+</html>
