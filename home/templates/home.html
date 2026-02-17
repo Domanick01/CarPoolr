@@ -52,6 +52,8 @@
             cursor: pointer;
             border-radius: 8px;
             transition: background-color 0.3s;
+            text-decoration: none;
+            display: inline-block;
         }
 
         .btn-signin:hover {
@@ -68,6 +70,8 @@
             cursor: pointer;
             border-radius: 8px;
             transition: background-color 0.3s;
+            text-decoration: none;
+            display: inline-block;
         }
 
         .btn-signup:hover {
@@ -188,10 +192,10 @@
 <body>
     <!-- Navigation Bar -->
     <nav>
-        <a href="#" class="logo">CarPoolr</a>
+        <a href="{% url 'home' %}" class="logo">CarPoolr</a>
         <div class="nav-buttons">
-            <button class="btn-signin">Sign In</button>
-            <button class="btn-signup">Sign Up</button>
+            <a class="btn-signin" href="{% url 'account:login' %}">Sign In</a>
+            <a class="btn-signup" href="#" aria-disabled="true">Sign Up</a>
         </div>
     </nav>
 
@@ -201,7 +205,7 @@
             <h1>Go anywhere with<br>CarPoolr</h1>
             <p class="hero-subtitle">Connect with fellow travelers and make every trip more affordable</p>
 
-            <!-- Search Card -->
+            <!-- Search Card (left unhooked on purpose) -->
             <div class="search-card">
                 <form>
                     <div class="input-group">
