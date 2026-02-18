@@ -10,6 +10,15 @@ class CustomUserRegistrationForm(UserCreationForm):
     Custom registration form with email validation, password strength,
     and unique username checking
     """
+    username = forms.CharField(
+         max_length=30,
+        required=True,
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Username'
+        })
+    )
+    
     email = forms.EmailField(
         required=True,
         validators=[EmailValidator(message="Please enter a valid email address")],
@@ -60,19 +69,6 @@ class CustomUserRegistrationForm(UserCreationForm):
         label="Are you a driver?"
     )
     
-    verified_status = forms.BooleanField(
-        required=False,
-        widget=forms.CheckboxInput(attrs={'class': 'form-check-input'})
-    )
-    
-    rating = forms.FloatField(
-        required=False,
-        widget=forms.NumberInput(attrs={
-            'class': 'form-control',
-            'placeholder': 'Rating'
-        })
-    )
-
     
     class Meta:
         model = User

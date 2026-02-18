@@ -34,9 +34,6 @@ def register_view(request):
     """
     Handle user registration with form validation and user creation
     """
-    if request.user.is_authenticated:
-        # Redirect authenticated users to home
-        return redirect('home')
     
     if request.method == 'POST':
         form = CustomUserRegistrationForm(request.POST)
@@ -88,7 +85,7 @@ def register_view(request):
         'title': 'Register'
     }
     
-    return render(request, 'accounts/register.html', context)
+    return render(request, 'account/register.html', context)
 
 @require_http_methods(["POST", "GET"])
 def logout_view(request):
@@ -97,7 +94,7 @@ def logout_view(request):
     """
     logout(request)
     messages.info(request, 'You have been logged out successfully.')
-    return redirect('login')
+    return render(request, 'account/login.html')
 
 @login_required
 def home_view(request):

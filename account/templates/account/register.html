@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CarPoolr - Register</title>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav>
+        <a href="{% url 'home' %}" class="logo">CarPoolr</a>
+        <div class="nav-buttons">
+            <a class="btn-signin" href="{% url 'account:login' %}">Sign In</a>
+            <a class="btn-signup" href="{% url 'account:register' %}">Sign Up</a>
+        </div>
+    </nav>
+
+    <!-- Registration Form -->
+    <section class="hero">
+        <div class="search-card">
+            <h1>Create an Account</h1>
+            <form method="post">
+                {% csrf_token %}
+                {{ form.non_field_errors }}
+                {% for field in form %}
+                    <div class="input-group">
+                        {% if field.field.widget.input_type == "checkbox" %}
+                            <label class="form-check-label">
+                                {{ field }} {{ field.label }}
+                            </label>
+                        {% else %}
+                            {{ field }}
+                        {% endif %}
+                        {% if field.errors %}
+                            <div class="error">{{ field.errors|striptags }}</div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+                <button type="submit" class="btn-submit">Register</button>
+            </form>
+        </div>
+    </section>
+</body>
+</html>
