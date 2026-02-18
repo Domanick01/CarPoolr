@@ -1,10 +1,9 @@
+import re
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.core.exceptions import ValidationError
 from django.core.validators import EmailValidator
-import re
-from .models import CustomUser #ignore this will be solved with dom adds models
-
+from .models import User 
 
 class CustomUserRegistrationForm(UserCreationForm):
     """
@@ -38,14 +37,6 @@ class CustomUserRegistrationForm(UserCreationForm):
         })
     )
     
-    user_type = forms.ChoiceField(
-        choices=CustomUser.USER_TYPE_CHOICES,
-        required=True,
-        widget=forms.Select(attrs={
-            'class': 'form-control'
-        })
-    )
-    
     phone_number = forms.CharField(
         max_length=15,
         required=False,
@@ -55,18 +46,40 @@ class CustomUserRegistrationForm(UserCreationForm):
         })
     )
     
+    age = forms.IntegerField(
+        required=False,
+        widget=forms.NumberInput(attrs={
+            'class' : 'form-control',
+            'placeholder' : 'Age'
+        })
+    )
+    
+    driver_status = forms.BooleanField(
+        required=False,
+        widget=forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+        label="Are you a driver?"
+    )
+    
+    verified_status = forms.BooleanField(
+        required=False,
+        widget=forms.CheckboxInput(attrs={'class': 'form-check-input'})
+    )
+    
+    rating = forms.FloatField(
+        required=False,
+        widget=forms.NumberInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'Rating'
+        })
+    )
+
+    
     class Meta:
-        model = CustomUser
+        model = User
         fields = [
             'username', 'email', 'first_name', 'last_name',
-            'user_type', 'phone_number', 'password1', 'password2'
+            'driver_status', 'phone_number', 'password1', 'password2'
         ]
-        widgets = {
-            'username': forms.TextInput(attrs={
-                'class': 'form-control',
-                'placeholder': 'Username'
-            }),
-        }
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -87,7 +100,7 @@ class CustomUserRegistrationForm(UserCreationForm):
         username = self.cleaned_data.get('username')
         
         # Check if username already exists
-        if CustomUser.objects.filter(username=username).exists():
+        if User.objects.filter(username=username).exists():
             raise ValidationError('This username is already taken.')
         
         # Check username format (alphanumeric and underscores only)
@@ -109,7 +122,7 @@ class CustomUserRegistrationForm(UserCreationForm):
         email = self.cleaned_data.get('email')
         
         # Check if email already exists
-        if CustomUser.objects.filter(email=email).exists():
+        if User.objects.filter(email=email).exists():
             raise ValidationError('An account with this email already exists.')
         
         # Convert to lowercase for consistency
@@ -168,13 +181,14 @@ class CustomUserRegistrationForm(UserCreationForm):
         return phone
     
     def save(self, commit=True):
-        """
-        Save the user with hashed password
-        """
-        user = super().save(commit=False)
+        '''Saves user with hashed password'''
+        user = super().save(commit=False)  # get the user instance
         user.email = self.cleaned_data['email']
-        
+        user.Age = self.cleaned_data.get('age')
+        user.Phone_Number = self.cleaned_data.get('phone_number')
+        user.driver_status = self.cleaned_data.get('driver_status', False)
+    
         if commit:
-            user.save()
-        
+            user.save()  # saves the user including the hashed password
+    
         return user

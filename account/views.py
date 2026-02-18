@@ -23,7 +23,7 @@ def login_view(request):
         
         if user is not None:
             login(request, user)
-            return redirect('account:success')  # Redirect to home after login
+            return redirect('home')  # Redirect to home after login
         else:
             messages.error(request, 'Invalid username or password')
     
