@@ -1,3 +1,13 @@
 from django.contrib import admin
+from account.models import Car, User
 
-# Register your models here.
+
+@admin.register(Car)
+class CarAdmin(admin.ModelAdmin):
+    list_display = ('CAR_MAKE', 'CAR_MODEL')
+    list_filter = ('CAR_MAKE', 'CAR_MODEL')
+
+@admin.register(User)
+class UserAdmin(admin.ModelAdmin):
+    list_display = ('Username', 'Email', 'Driver_Status', 'Verified_Status')
+    list_filter = ('Username', 'Email', 'Driver_Status', 'Verified_Status')
