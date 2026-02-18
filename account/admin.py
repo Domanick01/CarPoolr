@@ -1,6 +1,5 @@
 from django.contrib import admin
-from account.models import Car
-from account.models import User
+from account.models import Car, User
 
 
 @admin.register(Car)
