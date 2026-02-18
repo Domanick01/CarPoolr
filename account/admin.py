@@ -10,5 +10,5 @@ class CarAdmin(admin.ModelAdmin):
 
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
-    list_display = ('Username', 'Email')
-    list_filter = ('Username', 'Email')
+    list_display = ('Username', 'Email', 'Driver_Status', 'Verified_Status')
+    list_filter = ('Username', 'Email', 'Driver_Status', 'Verified_Status')
