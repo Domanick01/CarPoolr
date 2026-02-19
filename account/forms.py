@@ -158,15 +158,21 @@ class CustomUserRegistrationForm(UserCreationForm):
         
         return password
     
-    def clean_phone_number(self):
+    def clean_Phone_Number(self):
         """
         Validate phone number format if provided
         """
         phone = self.cleaned_data.get('phone_number')
         
         if phone:
+            
+            if not phone:
+                return None
+            
             # Remove spaces and dashes
             phone = phone.replace(' ', '').replace('-', '')
+            
+            
             
             # Check if it contains only digits and optional + at the start
             if not re.match(r'^\+?\d{10,15}$', phone):

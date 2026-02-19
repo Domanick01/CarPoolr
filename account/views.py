@@ -94,7 +94,7 @@ def logout_view(request):
     """
     logout(request)
     messages.info(request, 'You have been logged out successfully.')
-    return render(request, 'account/login.html')
+    return redirect('home')
 
 @login_required
 def home_view(request):
