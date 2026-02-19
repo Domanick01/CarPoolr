@@ -44,6 +44,24 @@
 
        .error { color:#dc2626; font-size:14px; margin-top:4px; }
 
+       /* Switch auth text under button */
+    .switch-auth {
+        text-align: center;
+        margin-top: 12px;
+        font-size: 14px;
+        color: #000;
+        font-weight: 400;
+    }
+
+    .switch-auth a {
+        color: #000;
+        text-decoration: none;
+        font-weight: 500;
+    }
+
+    .switch-auth a:hover {
+        text-decoration: underline;
+    }
 
        @media (max-width:768px) {
            nav { padding:16px 24px; }
@@ -86,6 +104,12 @@
                     </div>
                 {% endfor %}
                 <button type="submit" class="btn-submit">Register</button>
+
+                    <p class="switch-auth">
+                        Already have an account?
+                        <a href="{% url 'account:login' %}">Sign in</a>
+                    </p>
+
             </form>
         </div>
     </section>
