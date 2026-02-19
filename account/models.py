@@ -1,21 +1,18 @@
 from django.db import models
+from django.contrib.auth.models import AbstractUser
 from phonenumber_field.modelfields import PhoneNumberField
 
 # Fields: First Name: String, Last Name: String, Age: Integer, Driver Status: Boolean,
 # Verification Status: Boolean, Rating: Float, Car: object
-class User(models.Model):
-    FIRST_NAME = models.CharField(max_length=100)
-    LAST_NAME = models.CharField(max_length=100)
-    Username = models.CharField(max_length=100)
-    Age = models.IntegerField()
-    Email = models.EmailField()
+class User(AbstractUser):
+    Age = models.IntegerField(null=True, blank=True)
     Phone_Number = PhoneNumberField(unique=True, blank=True, null=True)
     Driver_Status = models.BooleanField(default=False)
     Verified_Status = models.BooleanField(default=False)
-    Rating = models.FloatField()
+    Rating = models.FloatField(null=True, blank=True)
 
     def __str__(self):
-        return f"{self.FIRST_NAME} {self.LAST_NAME}"
+        return f"{self.first_name} {self.last_name}"
 
     class Meta:
         db_table = 'user'
