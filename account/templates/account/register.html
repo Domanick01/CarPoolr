@@ -5,6 +5,55 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CarPoolr - Register</title>
 </head>
+<style>
+       * { margin:0; padding:0; box-sizing:border-box; }
+       body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background-color:#f5f5f5; color:#333; }
+      
+       /* Navigation */
+       nav { background-color:#000; padding:16px 48px; display:flex; justify-content:space-between; align-items:center; position:sticky; top:0; z-index:1000; }
+       .logo { color:#fff; font-size:28px; font-weight:600; text-decoration:none; }
+       .nav-buttons { display:flex; gap:16px; align-items:center; }
+       .btn-signin { background:transparent; color:#fff; border:none; padding:10px 24px; font-size:16px; font-weight:500; cursor:pointer; border-radius:8px; transition: background-color 0.3s; text-decoration:none; display:inline-block; }
+       .btn-signin:hover { background-color:#1a1a1a; }
+       .btn-signup { background-color:#dc2626; color:#fff; border:none; padding:10px 24px; font-size:16px; font-weight:600; cursor:pointer; border-radius:8px; transition: background-color 0.3s; text-decoration:none; display:inline-block; }
+       .btn-signup:hover { background-color:#b91c1c; }
+
+
+       /* Hero/registration card */
+       .hero { padding:80px 48px; max-width:1400px; margin:0 auto; display:flex; justify-content:center; }
+       .search-card { background:#fff; border-radius:12px; padding:40px; box-shadow:0 2px 8px rgba(0,0,0,0.1); max-width:500px; width:100%; }
+       h1 { font-size:32px; font-weight:700; color:#000; margin-bottom:24px; text-align:center; }
+
+
+       /* Form fields */
+       .input-group { margin-bottom:16px; }
+       input[type=text], input[type=email], input[type=password], input[type=number] {
+           width:100%; padding:14px 16px; font-size:16px; border:none; background-color:#f5f5f5; border-radius:8px; outline:none; transition: background-color 0.2s;
+       }
+       input:focus { background-color:#e5e5e5; }
+
+
+       /* Checkbox styling */
+       .form-check-label { display:flex; align-items:center; gap:8px; font-size:16px; cursor:pointer; }
+       input.form-check-input { width:18px; height:18px; cursor:pointer; }
+
+
+       .btn-submit { width:100%; background-color:#dc2626; color:#fff; border:none; padding:16px; font-size:18px; font-weight:600; cursor:pointer; border-radius:8px; margin-top:16px; transition: background-color 0.3s; }
+       .btn-submit:hover { background-color:#b91c1c; }
+
+
+       .error { color:#dc2626; font-size:14px; margin-top:4px; }
+
+
+       @media (max-width:768px) {
+           nav { padding:16px 24px; }
+           .hero { padding:48px 24px; }
+           .search-card { padding:24px; }
+           h1 { font-size:28px; }
+       }
+</style>
+
+
 <body>
     <!-- Navigation Bar -->
     <nav>
