@@ -1,250 +1,210 @@
+{% extends 'base.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CarPoolr - Share the Ride, Share the Journey</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            background-color: #f5f5f5;
-            color: #333;
-        }
+{% block title %}CarPoolr - Share the Ride, Share the Journey{% endblock %}
 
-        /* Navigation Bar */
-        nav {
-            background-color: #000;
-            padding: 16px 48px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
+{% block styles %}
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
 
-        .logo {
-            color: #fff;
-            font-size: 28px;
-            font-weight: 600;
-            text-decoration: none;
-        }
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        background-color: #f5f5f5;
+        color: #333;
+    }
 
-        .nav-buttons {
-            display: flex;
-            gap: 16px;
-            align-items: center;
-        }
+    nav {
+        background-color: #000;
+        padding: 16px 48px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+    }
 
-        .btn-signin {
-            background: transparent;
-            color: #fff;
-            border: none;
-            padding: 10px 24px;
-            font-size: 16px;
-            font-weight: 500;
-            cursor: pointer;
-            border-radius: 8px;
-            transition: background-color 0.3s;
-            text-decoration: none;
-            display: inline-block;
-        }
+    .logo {
+        color: #fff;
+        font-size: 28px;
+        font-weight: 600;
+        text-decoration: none;
+    }
 
-        .btn-signin:hover {
-            background-color: #1a1a1a;
-        }
+    .nav-buttons {
+        display: flex;
+        gap: 16px;
+        align-items: center;
+    }
 
-        .btn-signup {
-            background-color: #dc2626;
-            color: #fff;
-            border: none;
-            padding: 10px 24px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            border-radius: 8px;
-            transition: background-color 0.3s;
-            text-decoration: none;
-            display: inline-block;
-        }
+    .btn-signin {
+        background: transparent;
+        color: #fff;
+        border: none;
+        padding: 10px 24px;
+        font-size: 16px;
+        font-weight: 500;
+        cursor: pointer;
+        border-radius: 8px;
+        transition: background-color 0.3s;
+        text-decoration: none;
+        display: inline-block;
+    }
 
-        .btn-signup:hover {
-            background-color: #b91c1c;
-        }
+    .btn-signin:hover {
+        background-color: #1a1a1a;
+    }
 
-        /* Hero Section */
-        .hero {
-            padding: 80px 48px;
-            max-width: 1400px;
-            margin: 0 auto;
-        }
+    .btn-signup {
+        background-color: #dc2626;
+        color: #fff;
+        border: none;
+        padding: 10px 24px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        border-radius: 8px;
+        transition: background-color 0.3s;
+        text-decoration: none;
+        display: inline-block;
+    }
 
+    .btn-signup:hover {
+        background-color: #b91c1c;
+    }
+
+    .hero {
+        padding: 80px 48px;
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+
+    .hero-layout {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 64px;
+    }
+
+    .hero-content {
+        flex: 1;
+        max-width: 800px;
+    }
+
+    .hero-media {
+        flex: 0 0 auto;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .hero-image {
+        width: clamp(320px, 42vw, 640px);
+        height: auto;
+        aspect-ratio: 1 / 1;
+        object-fit: cover;
+        border-radius: 24px;
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.14);
+        background: #fff;
+    }
+
+    h1 {
+        font-size: 56px;
+        font-weight: 700;
+        line-height: 1.1;
+        margin-bottom: 20px;
+        color: #000;
+    }
+
+    .hero-subtitle {
+        font-size: 18px;
+        color: #666;
+        margin-bottom: 48px;
+        line-height: 1.5;
+    }
+
+    .search-card {
+        background: #fff;
+        border-radius: 12px;
+        padding: 40px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        max-width: 600px;
+    }
+
+    .btn-search {
+        width: 100%;
+        background-color: #dc2626;
+        color: #fff;
+        border: none;
+        padding: 18px;
+        font-size: 18px;
+        font-weight: 600;
+        cursor: pointer;
+        border-radius: 8px;
+        margin-top: 0;
+        transition: background-color 0.3s;
+    }
+
+    .btn-search:hover {
+        background-color: #b91c1c;
+    }
+
+    .messages-bar {
+        background: #dc2626;
+        color: #fff;
+        padding: 12px 48px;
+    }
+
+    @media (max-width: 1100px) {
         .hero-layout {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 64px;
+            flex-direction: column;
+            align-items: flex-start;
         }
-
-        .hero-content {
-            flex: 1;
-            max-width: 800px;
-        }
-
         .hero-media {
-            flex: 0 0 auto;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        /* Updated sizing for 1024x1024 image:
-           - scales responsively
-           - never exceeds a comfortable desktop size
-           - keeps a perfect square aspect ratio */
-        .hero-image {
-            width: clamp(320px, 42vw, 640px);
-            height: auto;
-            aspect-ratio: 1 / 1;
-            object-fit: cover;
-            border-radius: 24px;
-            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.14);
-            background: #fff;
-        }
-
-        h1 {
-            font-size: 56px;
-            font-weight: 700;
-            line-height: 1.1;
-            margin-bottom: 20px;
-            color: #000;
-        }
-
-        .hero-subtitle {
-            font-size: 18px;
-            color: #666;
-            margin-bottom: 48px;
-            line-height: 1.5;
-        }
-
-        /* Card */
-        .search-card {
-            background: #fff;
-            border-radius: 12px;
-            padding: 40px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-            max-width: 600px;
-        }
-
-        .btn-search {
             width: 100%;
-            background-color: #dc2626;
-            color: #fff;
-            border: none;
-            padding: 18px;
-            font-size: 18px;
-            font-weight: 600;
-            cursor: pointer;
-            border-radius: 8px;
-            margin-top: 0;
-            transition: background-color 0.3s;
         }
-
-        .btn-search:hover {
-            background-color: #b91c1c;
+        .hero-image {
+            width: min(100%, 640px);
         }
+    }
 
-        /* Responsive Design */
-        @media (max-width: 1100px) {
-            .hero-layout {
-                flex-direction: column;
-                align-items: flex-start;
-            }
+    @media (max-width: 768px) {
+        nav { padding: 16px 24px; }
+        .hero { padding: 48px 24px; }
+        h1 { font-size: 40px; }
+        .search-card { padding: 24px; }
+        .logo { font-size: 24px; }
+    }
+</style>
+{% endblock %}
 
-            .hero-media {
-                width: 100%;
-            }
+{% block content %}
+<section class="hero">
+    <div class="hero-layout">
+        <div class="hero-content">
+            <h1>Go anywhere with<br>CarPoolr</h1>
+            <p class="hero-subtitle">Connect with fellow travelers and make every trip more affordable</p>
 
-            .hero-image {
-                width: min(100%, 640px);
-            }
-        }
-
-        @media (max-width: 768px) {
-            nav {
-                padding: 16px 24px;
-            }
-
-            .hero {
-                padding: 48px 24px;
-            }
-
-            h1 {
-                font-size: 40px;
-            }
-
-            .search-card {
-                padding: 24px;
-            }
-
-            .logo {
-                font-size: 24px;
-            }
-        }
-    </style>
-</head>
-<body>
-    <!-- Navigation Bar -->
-    <nav>
-        <a href="{% url 'home' %}" class="logo">CarPoolr</a>
-        <div class="nav-buttons">
-            {% if user.is_authenticated %}
-            <a class="btn-signin" href="{% url 'account:logout' %}">Logout</a>
-            {% else %}
-            <a class="btn-signin" href="{% url 'account:login' %}">Sign In</a>
-            <a class="btn-signup" href="{% url 'account:register' %}">Sign Up</a>
-            {% endif %}
+            <div class="search-card">
+                <a href="{% url 'rides:list' %}" class="btn-search" style="display: inline-block; text-align: center; text-decoration: none;">
+                    View rides
+                </a>
+            </div>
         </div>
-    </nav>
-    {% if messages %}
-    <div style="background:#dc2626; color:#fff; padding:12px 48px;">
-        {% for message in messages %}
-            <p>{{ message }}</p>
-        {% endfor %}
+
+        <div class="hero-media">
+            <img
+                src="{% static 'home/rides-hero.png' %}"
+                alt="CarPoolr rides"
+                class="hero-image"
+                width="1024"
+                height="1024"
+            />
+        </div>
     </div>
-    {% endif %}
-
-    <!-- Hero Section -->
-    <section class="hero">
-        <div class="hero-layout">
-            <div class="hero-content">
-                <h1>Go anywhere with<br>CarPoolr</h1>
-                <p class="hero-subtitle">Connect with fellow travelers and make every trip more affordable</p>
-
-                <div class="search-card">
-                    <a href="{% url 'rides:list' %}" class="btn-search" style="display: inline-block; text-align: center; text-decoration: none;">
-                        View rides
-                    </a>
-                </div>
-            </div>
-
-            <div class="hero-media">
-                <img
-                    src="{% static 'home/rides-hero.png' %}"
-                    alt="CarPoolr rides"
-                    class="hero-image"
-                    width="1024"
-                    height="1024"
-                />
-            </div>
-        </div>
-    </section>
-</body>
-</html>
+</section>
+{% endblock %}
