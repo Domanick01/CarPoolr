@@ -12,6 +12,7 @@ class Ride(models.Model):
     destination = models.CharField(max_length=255)
     price = models.DecimalField(max_digits=8, decimal_places=2)
     departure_time = models.DateTimeField()
+    total_seats = models.PositiveIntegerField(default=4)
 
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -20,6 +21,14 @@ class Ride(models.Model):
 
     def __str__(self) -> str:
         return f"{self.pickup_location} → {self.destination} @ {self.departure_time}"
+    
+    def seats_taken(self):
+        """Number of accepted RideRequests"""
+        return self.requests.filter(status='accepted').count()  # use 'requests' here
+
+    def seats_available(self):
+        """Remaining seats"""
+        return max(self.total_seats - self.seats_taken(), 0)
 
 class RideRequest(models.Model):
     STATUS_CHOICES = [

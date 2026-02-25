@@ -97,6 +97,8 @@
         <span class="pill">Depart: {{ ride.departure_time }}</span>
         <span class="pill">Price: ${{ ride.price }}</span>
         <div class="driver">Driver: {{ ride.driver.username }}</div>
+        <div class="pill">Seats: {{ ride.seats_taken }} / {{ ride.total_seats }} taken</div>
+        <div class="pill">Seats available: {{ ride.seats_available }}</div>
     </div>
 
     {% if user.is_authenticated %}
@@ -107,11 +109,15 @@
             <span class="status-badge status-{{ user_request.status }}">
                 {{ user_request.get_status_display }}
             </span>
-        {% else %}
-            <form method="post" action="{% url 'rides:request_join' ride.pk %}">
-                {% csrf_token %}
-                <button type="submit" class="btn-request">Request to Join</button>
-            </form>
+        {% elif not user_request %}
+            {% if ride.seats_available > 0 %}
+                <form method="post" action="{% url 'rides:request_join' ride.pk %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn-request">Request to Join</button>
+                </form>
+            {% else %}
+                <span class="pill" style="background-color:#fee2e2; color:#991b1b;">Ride is full</span>
+            {% endif %}
         {% endif %}
     {% else %}
         <p style="color: #666;">

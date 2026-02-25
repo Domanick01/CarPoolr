@@ -97,6 +97,7 @@
                     <span>{{ req.passenger.username }}</span> wants to join your ride
                     <strong>{{ req.ride.pickup_location }} → {{ req.ride.destination }}</strong>
                     on {{ req.ride.departure_time }}
+                    <p>Seats left: {{ req.ride.seats_available }} / {{ req.ride.total_seats }}</p>
                 </div>
                 <div class="request-actions">
                     <form method="post" action="{% url 'rides:request_respond' req.pk %}">
