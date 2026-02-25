@@ -117,8 +117,11 @@ def ride_request_respond(request, request_pk):
     action = request.POST.get('action')
 
     if action == 'accept':
-        ride_request.status = 'accepted'
-        messages.success(request, f"You accepted {ride_request.passenger.username}'s request.")
+        if ride_request.ride.seats_available() <= 0:
+            messages.error(request, "Cannot accept request. This ride is full.")
+        else:
+            ride_request.status = 'accepted'
+            messages.success(request, f"You accepted {ride_request.passenger.username}'s request.")
     elif action == 'deny':
         ride_request.status = 'denied'
         messages.success(request, f"You denied {ride_request.passenger.username}'s request.")

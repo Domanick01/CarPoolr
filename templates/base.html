@@ -89,7 +89,7 @@
         <div class="nav-buttons">
             <a class="btn-signin" href="{% url 'rides:list' %}">Rides</a>
             {% if user.is_authenticated %}
-            <li><a class="btn-signin" href="{% url 'rides:my_rides' %}">My Rides</a></li>  <!-- new link -->
+            <li><a class="btn-signin" href="{% url 'rides:my_rides' %}">My Rides</a></li> 
 
             {% if user.Driver_Status %}
                  <a class="btn-signin" href="{% url 'rides:notifications' %}">Notifications</a>
