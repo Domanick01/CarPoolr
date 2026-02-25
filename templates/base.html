@@ -89,6 +89,11 @@
         <div class="nav-buttons">
             <a class="btn-signin" href="{% url 'rides:list' %}">Rides</a>
             {% if user.is_authenticated %}
+            <li><a class="btn-signin" href="{% url 'rides:my_rides' %}">My Rides</a></li>  <!-- new link -->
+
+            {% if user.Driver_Status %}
+                 <a class="btn-signin" href="{% url 'rides:notifications' %}">Notifications</a>
+            {% endif %}
                 <span style="color: #fff; font-size: 16px;">Welcome, {{ user.username }}!</span>
                 <a class="btn-signin" href="{% url 'account:logout' %}">Logout</a>
             {% else %}

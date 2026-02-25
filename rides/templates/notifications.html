@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+
+{% block title %}Notifications - CarPoolr{% endblock %}
+
+{% block styles %}
+<style>
+    .page {
+        padding: 48px;
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    h1 {
+        font-size: 40px;
+        font-weight: 700;
+        color: #000;
+        margin-bottom: 24px;
+    }
+
+    .card {
+        background: #fff;
+        border-radius: 12px;
+        padding: 20px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        margin-top: 16px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 16px;
+        flex-wrap: wrap;
+    }
+
+    .request-info {
+        font-size: 16px;
+        color: #333;
+    }
+
+    .request-info span {
+        font-weight: 600;
+        color: #000;
+    }
+
+    .request-actions {
+        display: flex;
+        gap: 8px;
+    }
+
+    .btn-accept {
+        background-color: #16a34a;
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        border-radius: 8px;
+        transition: background-color 0.3s;
+    }
+
+    .btn-accept:hover { background-color: #15803d; }
+
+    .btn-deny {
+        background-color: #dc2626;
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        border-radius: 8px;
+        transition: background-color 0.3s;
+    }
+
+    .btn-deny:hover { background-color: #b91c1c; }
+
+    .empty {
+        color: #666;
+        margin-top: 16px;
+    }
+
+    @media (max-width: 768px) {
+        .page { padding: 24px; }
+        h1 { font-size: 28px; }
+        .card { flex-direction: column; align-items: flex-start; }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<main class="page">
+    <h1>Notifications</h1>
+
+    {% if pending_requests %}
+        {% for req in pending_requests %}
+            <div class="card">
+                <div class="request-info">
+                    <span>{{ req.passenger.username }}</span> wants to join your ride
+                    <strong>{{ req.ride.pickup_location }} → {{ req.ride.destination }}</strong>
+                    on {{ req.ride.departure_time }}
+                </div>
+                <div class="request-actions">
+                    <form method="post" action="{% url 'rides:request_respond' req.pk %}">
+                        {% csrf_token %}
+                        <button type="submit" name="action" value="accept" class="btn-accept">Accept</button>
+                    </form>
+                    <form method="post" action="{% url 'rides:request_respond' req.pk %}">
+                        {% csrf_token %}
+                        <button type="submit" name="action" value="deny" class="btn-deny">Deny</button>
+                    </form>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p class="empty">No pending requests.</p>
+    {% endif %}
+</main>
+{% endblock %}

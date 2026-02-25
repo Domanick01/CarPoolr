@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+
+{% block title %}My Rides - CarPoolr{% endblock %}
+
+{% block styles %}
+<style>
+    .page {
+        padding: 48px;
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    h1 {
+        font-size: 40px;
+        font-weight: 700;
+        color: #000;
+        margin-bottom: 24px;
+    }
+
+    .card {
+        background: #fff;
+        border-radius: 12px;
+        padding: 20px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        margin-top: 16px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 16px;
+        flex-wrap: wrap;
+    }
+
+    .ride-info {
+        font-size: 16px;
+        color: #333;
+    }
+
+    .ride-info span {
+        font-weight: 600;
+        color: #000;
+    }
+
+    .ride-actions {
+        display: flex;
+        gap: 8px;
+    }
+
+    .btn-cancel {
+        background-color: #dc2626;
+        color: #fff;
+        border: none;
+        padding: 8px 16px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        border-radius: 8px;
+        transition: background-color 0.3s;
+    }
+
+    .btn-cancel:hover { background-color: #b91c1c; }
+
+    .empty {
+        color: #666;
+        margin-top: 16px;
+        font-style: italic;
+    }
+
+    @media (max-width: 768px) {
+        .page { padding: 24px; }
+        h1 { font-size: 28px; }
+        .card { flex-direction: column; align-items: flex-start; }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<main class="page">
+    <h1>My Rides</h1>
+
+    {% if accepted_rides %}
+        {% for req in accepted_rides %}
+            <div class="card">
+                <div class="ride-info">
+                    Driver: <span>{{ req.ride.driver.username }}</span><br>
+                    From <strong>{{ req.ride.pickup_location }}</strong> 
+                    to <strong>{{ req.ride.destination }}</strong><br>
+                    Departure: {{ req.ride.departure_time|date:"M d, Y H:i" }}
+                </div>
+                <div class="ride-actions">
+                    <form method="post" action="{% url 'rides:cancel_ride' req.pk %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn-cancel">Cancel Ride</button>
+                    </form>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p class="empty">You have no accepted rides.</p>
+    {% endif %}
+</main>
+{% endblock %}

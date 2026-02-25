@@ -1,0 +1,122 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ ride.pickup_location }} → {{ ride.destination }}{% endblock %}
+
+{% block styles %}
+<style>
+    .page {
+        padding: 48px;
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    h1 {
+        font-size: 40px;
+        font-weight: 700;
+        color: #000;
+        margin-bottom: 24px;
+    }
+
+    .card {
+        background: #fff;
+        border-radius: 12px;
+        padding: 28px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        margin-bottom: 24px;
+    }
+
+    .pill {
+        background-color: #f5f5f5;
+        border-radius: 999px;
+        padding: 8px 12px;
+        font-size: 14px;
+        color: #333;
+        display: inline-block;
+        margin-right: 8px;
+        margin-bottom: 8px;
+    }
+
+    .driver {
+        color: #666;
+        font-size: 14px;
+        margin-top: 12px;
+    }
+
+    .btn-request {
+        background-color: #dc2626;
+        color: #fff;
+        border: none;
+        padding: 14px 28px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        border-radius: 8px;
+        transition: background-color 0.3s;
+        margin-top: 8px;
+    }
+
+    .btn-request:hover { background-color: #b91c1c; }
+
+    .status-badge {
+        display: inline-block;
+        padding: 8px 16px;
+        border-radius: 999px;
+        font-size: 14px;
+        font-weight: 600;
+        margin-top: 8px;
+    }
+
+    .status-pending { background-color: #fef9c3; color: #854d0e; }
+    .status-accepted { background-color: #dcfce7; color: #166534; }
+    .status-denied { background-color: #fee2e2; color: #991b1b; }
+
+    .btn-back {
+        display: inline-block;
+        margin-bottom: 24px;
+        color: #666;
+        text-decoration: none;
+        font-size: 14px;
+    }
+
+    .btn-back:hover { text-decoration: underline; }
+
+    @media (max-width: 768px) {
+        .page { padding: 24px; }
+        h1 { font-size: 28px; }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<main class="page">
+    <a href="{% url 'rides:list' %}" class="btn-back">← Back to rides</a>
+
+    <h1>{{ ride.pickup_location }} → {{ ride.destination }}</h1>
+
+    <div class="card">
+        <span class="pill">Depart: {{ ride.departure_time }}</span>
+        <span class="pill">Price: ${{ ride.price }}</span>
+        <div class="driver">Driver: {{ ride.driver.username }}</div>
+    </div>
+
+    {% if user.is_authenticated %}
+        {% if user == ride.driver %}
+            <p style="color: #666;">This is your ride.</p>
+        {% elif user_request %}
+            <p style="color: #666;">Your request status:</p>
+            <span class="status-badge status-{{ user_request.status }}">
+                {{ user_request.get_status_display }}
+            </span>
+        {% else %}
+            <form method="post" action="{% url 'rides:request_join' ride.pk %}">
+                {% csrf_token %}
+                <button type="submit" class="btn-request">Request to Join</button>
+            </form>
+        {% endif %}
+    {% else %}
+        <p style="color: #666;">
+            <a href="{% url 'account:login' %}">Sign in</a> to request to join this ride.
+        </p>
+    {% endif %}
+</main>
+{% endblock %}
