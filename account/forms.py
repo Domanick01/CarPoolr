@@ -188,8 +188,7 @@ class CustomUserRegistrationForm(UserCreationForm):
         user.email = self.cleaned_data['email']
         user.Age = self.cleaned_data.get('age')
         user.Phone_Number = self.cleaned_data.get('phone_number') or None
-        user.driver_status = self.cleaned_data.get('driver_status', False)
-    
+        user.Driver_Status = self.cleaned_data.get('driver_status', False)    
         if commit:
             user.save()  # saves the user including the hashed password
     
