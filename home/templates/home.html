@@ -213,6 +213,13 @@
             {% endif %}
         </div>
     </nav>
+    {% if messages %}
+    <div style="background:#dc2626; color:#fff; padding:12px 48px;">
+        {% for message in messages %}
+            <p>{{ message }}</p>
+        {% endfor %}
+    </div>
+    {% endif %}
 
     <!-- Hero Section -->
     <section class="hero">
