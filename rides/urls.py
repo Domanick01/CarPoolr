@@ -7,4 +7,6 @@ app_name = "rides"
 urlpatterns = [
     path("", views.ride_list, name="list"),
     path("new/", views.ride_create, name="create"),
+    path("<int:pk>/edit/", views.ride_edit, name="edit"),
+    path("<int:pk>/delete/", views.ride_delete, name="delete"),
 ]
