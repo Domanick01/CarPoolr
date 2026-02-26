@@ -1,0 +1,144 @@
+{% extends 'base.html' %}
+
+{% block title %}CarPoolr - Profile{% endblock %}
+
+{% block styles %}
+<style>
+    .profile-container {
+        max-width: 1200px;
+        margin: 60px auto;
+        padding: 0 48px;
+    }
+
+    .profile-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 40px;
+    }
+
+    .profile-title {
+        font-size: 36px;
+        font-weight: 700;
+        color: #000;
+    }
+
+    .settings-link {
+        color: #dc2626;
+        text-decoration: none;
+        font-weight: 500;
+    }
+
+    .settings-link:hover {
+        text-decoration: underline;
+    }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 24px;
+        margin-bottom: 40px;
+    }
+
+    .stat-card {
+        background: #fff;
+        padding: 32px;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        text-align: center;
+    }
+
+    .stat-number {
+        font-size: 40px;
+        font-weight: 700;
+        color: #dc2626;
+        margin-bottom: 8px;
+    }
+
+    .stat-label {
+        font-size: 16px;
+        color: #666;
+    }
+
+    .calendar-card {
+        background: #fff;
+        padding: 32px;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        margin-bottom: 40px;
+    }
+
+    .calendar-card h3 {
+        margin-bottom: 16px;
+    }
+
+    .calendar-input {
+        padding: 12px;
+        border-radius: 8px;
+        border: 1px solid #ddd;
+        font-size: 16px;
+    }
+
+    .motivation-card {
+        background: #000;
+        color: #fff;
+        padding: 32px;
+        border-radius: 12px;
+        text-align: center;
+        font-size: 18px;
+        font-weight: 500;
+    }
+
+    @media (max-width: 768px) {
+        .profile-container { padding: 0 24px; }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="profile-container">
+
+    <div class="profile-header">
+        <div class="profile-title">Your Dashboard</div>
+        <a href="#" class="settings-link">Account Settings</a>
+    </div>
+
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-number">12</div>
+            <div class="stat-label">Rides Offered</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">8</div>
+            <div class="stat-label">Rides Taken</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">4.9</div>
+            <div class="stat-label">Average Rating</div>
+        </div>
+    </div>
+
+    <div class="calendar-card">
+        <h3>Your Schedule</h3>
+        <input type="date" class="calendar-input">
+    </div>
+
+    <div class="motivation-card">
+        <span id="quote"></span>
+    </div>
+
+</div>
+
+<script>
+    const quotes = [
+        "Every mile shared makes the journey lighter.",
+        "Drive forward. Progress always.",
+        "Small rides. Big connections.",
+        "Consistency builds momentum.",
+        "You're going places — literally."
+    ];
+
+    const randomIndex = Math.floor(Math.random() * quotes.length);
+    document.getElementById("quote").textContent = quotes[randomIndex];
+</script>
+{% endblock %}
