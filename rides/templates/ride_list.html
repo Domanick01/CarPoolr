@@ -94,7 +94,11 @@
     {% if rides %}
         {% for ride in rides %}
             <section class="card">
-                <div class="ride-title">{{ ride.pickup_location }} → {{ ride.destination }}</div>
+                <div class="ride-title">
+                    <a href="{% url 'rides:detail' ride.pk %}" style="text-decoration: none; color: #000;">
+                        {{ ride.pickup_location }} → {{ ride.destination }}
+                    </a>
+                </div>
 
                 <div class="ride-meta">
                     <div class="meta-row">

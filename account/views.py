@@ -110,14 +110,14 @@ def home_view(request):
 
 
 #next thing to implement profiles 
-# @login_required
-# def profile_view(request):
-#     """
+@login_required
+def profile_view(request):
+     """
 #     User profile page
 #     """
-#     context = {
-#         'title': 'Profile',
-#         'user': request.user
-#     }
+     context = {
+         'title': 'Profile',
+         'user': request.user
+         }
     
-#     return render(request, 'accounts/profile.html', context)
+     return render(request, 'account/profile.html', context)
