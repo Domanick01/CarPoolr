@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     'account', # Week 1 for login system
     'home',
     'phonenumber_field', # This is being used in the user model (This was a seperate pip install)
+    'location_field.apps.DefaultConfig', # This is being used in the events model for direct location (Another seperate pip)
+    'events',
 ]
 
 MIDDLEWARE = [
