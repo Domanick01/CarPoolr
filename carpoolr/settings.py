@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'phonenumber_field', # This is being used in the user model (This was a seperate pip install)
     'location_field.apps.DefaultConfig', # This is being used in the events model for direct location (Another seperate pip)
     'events',
+    'rides',
 ]
 
 MIDDLEWARE = [
@@ -59,7 +60,7 @@ ROOT_URLCONF = 'carpoolr.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -90,7 +91,7 @@ DATABASES = {
 
 # Authentication settings
 AUTH_USER_MODEL = 'account.User'
-LOGIN_URL = 'login'
+LOGIN_URL = 'account:login'
 LOGIN_REDIRECT_URL = 'home'
 LOGOUT_REDIRECT_URL = 'login'
 
