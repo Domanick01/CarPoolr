@@ -88,6 +88,7 @@
         <a href="{% url 'home' %}" class="logo">CarPoolr</a>
         <div class="nav-buttons">
             <a class="btn-signin" href="{% url 'rides:list' %}">Rides</a>
+            <a class="btn-signin" href="{% url 'events:list' %}">Events</a>
             {% if user.is_authenticated %}
             <li><a class="btn-signin" href="{% url 'rides:my_rides' %}">My Rides</a></li> 
             <li><a class="btn-signin" href="{% url 'account:profile' %}">Profile</a></li> 

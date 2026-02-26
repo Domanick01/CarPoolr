@@ -1,6 +1,6 @@
 from django import forms
-
 from .models import Ride
+from events.models import Event
 
 
 class RideForm(forms.ModelForm):
@@ -10,4 +10,10 @@ class RideForm(forms.ModelForm):
 
     class Meta:
         model = Ride
-        fields = ["pickup_location", "destination", "price", "departure_time"]
+        fields = ["pickup_location", "destination", "price", "departure_time", "event"]
+        widgets = {
+            'event': forms.Select(attrs={
+                'class': 'form-control'
+            })
+        }
+        
