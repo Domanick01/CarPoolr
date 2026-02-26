@@ -81,6 +81,27 @@
 
     .switch-auth a:hover { text-decoration: underline; }
 
+    select {
+    width: 100%;
+    padding: 14px 16px;
+    font-size: 16px;
+    border: none;
+    background-color: #f5f5f5;
+    border-radius: 8px;
+    outline: none;
+    transition: background-color 0.2s;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23333' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 16px center;
+    cursor: pointer;
+}
+
+select:focus {
+    background-color: #e5e5e5;
+}
+
     @media (max-width: 768px) {
         .hero { padding: 48px 24px; }
         .search-card { padding: 24px; }

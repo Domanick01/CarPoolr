@@ -63,11 +63,11 @@ class CustomUserRegistrationForm(UserCreationForm):
         })
     )
     
-    driver_status = forms.BooleanField(
-        required=False,
-        widget=forms.CheckboxInput(attrs={'class': 'form-check-input'}),
-        label="Are you a driver?"
-    )
+    driver_status = forms.ChoiceField(
+    choices=[('False', 'I am a passenger'), ('True', 'I am a driver')],
+    widget=forms.Select(attrs={'class': 'form-control'}),
+    label="I am a..."
+)
     
     
     class Meta:
@@ -188,8 +188,7 @@ class CustomUserRegistrationForm(UserCreationForm):
         user.email = self.cleaned_data['email']
         user.Age = self.cleaned_data.get('age')
         user.Phone_Number = self.cleaned_data.get('phone_number') or None
-        user.Driver_Status = self.cleaned_data.get('driver_status', False)    
+        user.Driver_Status = self.cleaned_data.get('driver_status') == 'True'        
         if commit:
             user.save()  # saves the user including the hashed password
-    
         return user
