@@ -113,17 +113,20 @@ class CustomUserRegistrationForm(UserCreationForm):
     
     def clean_email(self):
         """
-        Validate email uniqueness
+        Validate email uniqueness and require .edu domain
         """
         email = self.cleaned_data.get('email')
-        
-        # Check if email already exists
+
+        email = email.lower()
+
+        if not email.endswith('.edu'):
+            raise ValidationError('Only .edu email addresses are allowed.')
+
         if User.objects.filter(email=email).exists():
             raise ValidationError('An account with this email already exists.')
-        
-        # Convert to lowercase for consistency
-        return email.lower()
-    
+
+        return email
+
     def clean_password1(self):
         """
         Validate password strength beyond Django's default validators
