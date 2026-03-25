@@ -1,9 +1,12 @@
+from django.db.models import Avg, Count
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.views.decorators.http import require_http_methods
+
 from .forms import CustomUserRegistrationForm
+from rides.models import Ride, RideRequest, Review
 
 def success_view(request):
     return render(request, 'account/success.html')
@@ -106,18 +109,39 @@ def home_view(request):
         'user': request.user
     }
     
-    return render(request, 'home/home.html', context) #i dont think this will work but we will see
+    return render(request, 'home/home.html', context)
 
 
-#next thing to implement profiles 
 @login_required
 def profile_view(request):
-     """
-#     User profile page
-#     """
-     context = {
-         'title': 'Profile',
-         'user': request.user
-         }
-    
-     return render(request, 'account/profile.html', context)
+    """
+    User profile page with live ride and review stats.
+    """
+    offered_rides = Ride.objects.filter(driver=request.user).count()
+    taken_rides = RideRequest.objects.filter(
+        passenger=request.user,
+        status='accepted'
+    ).count()
+
+    received_reviews_qs = Review.objects.filter(driver=request.user)
+    written_reviews_qs = Review.objects.filter(reviewer=request.user)
+
+    average_rating = received_reviews_qs.aggregate(avg=Avg('rating'))['avg']
+    average_rating = round(average_rating, 1) if average_rating is not None else None
+
+    recent_received_reviews = received_reviews_qs.select_related(
+        'reviewer', 'ride'
+    ).order_by('-created_at')[:5]
+
+    context = {
+        'title': 'Profile',
+        'user': request.user,
+        'offered_rides': offered_rides,
+        'taken_rides': taken_rides,
+        'average_rating': average_rating,
+        'received_reviews_count': received_reviews_qs.count(),
+        'written_reviews_count': written_reviews_qs.count(),
+        'recent_received_reviews': recent_received_reviews,
+    }
+
+    return render(request, 'account/profile.html', context)

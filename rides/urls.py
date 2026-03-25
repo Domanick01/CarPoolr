@@ -13,6 +13,7 @@ urlpatterns = [
     path("<int:pk>/request/", views.ride_request_join, name="request_join"),
     path("requests/<int:request_pk>/respond/", views.ride_request_respond, name="request_respond"),
     path("notifications/", views.notifications, name="notifications"),
-    path('my-rides/', views.my_rides, name='my_rides'),
-    path('my-rides/cancel/<int:request_pk>/', views.cancel_ride, name='cancel_ride'),
+    path("my-rides/", views.my_rides, name="my_rides"),
+    path("my-rides/cancel/<int:request_pk>/", views.cancel_ride, name="cancel_ride"),
+    path("my-rides/<int:request_pk>/review/", views.leave_review, name="leave_review"),
 ]

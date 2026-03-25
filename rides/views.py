@@ -1,12 +1,10 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_http_methods
-from django.shortcuts import redirect, render, get_object_or_404
-from .models import Ride, RideRequest
 
-from .forms import RideForm
-from .models import Ride
+from .forms import RideForm, ReviewForm
+from .models import Ride, RideRequest, Review
 
 
 def ride_list(request):
@@ -36,6 +34,50 @@ def ride_create(request):
 
     return render(request, "ride_form.html", {"form": form})
 
+
+@login_required
+@require_http_methods(["GET", "POST"])
+def leave_review(request, request_pk):
+    ride_request = get_object_or_404(
+        RideRequest.objects.select_related("ride", "ride__driver"),
+        pk=request_pk,
+        passenger=request.user,
+        status="accepted",
+    )
+
+    existing_review = Review.objects.filter(
+        ride=ride_request.ride,
+        reviewer=request.user,
+    ).first()
+
+    if request.method == "POST":
+        if existing_review:
+            form = ReviewForm(request.POST, instance=existing_review)
+        else:
+            form = ReviewForm(request.POST)
+
+        if form.is_valid():
+            review = form.save(commit=False)
+            review.ride = ride_request.ride
+            review.driver = ride_request.ride.driver
+            review.reviewer = request.user
+            review.save()
+            messages.success(request, "Your review was submitted.")
+            return redirect("rides:my_rides")
+    else:
+        form = ReviewForm(instance=existing_review)
+
+    return render(
+        request,
+        "leave_review.html",
+        {
+            "form": form,
+            "ride_request": ride_request,
+            "existing_review": existing_review,
+        },
+    )
+
+
 @login_required
 @require_http_methods(["GET", "POST"])
 def ride_edit(request, pk):
@@ -55,6 +97,7 @@ def ride_edit(request, pk):
         form = RideForm(instance=ride)
 
     return render(request, "ride_form.html", {"form": form})
+
 
 @login_required
 @require_http_methods(["POST"])
