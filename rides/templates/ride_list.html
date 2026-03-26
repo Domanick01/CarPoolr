@@ -37,6 +37,7 @@
         padding: 20px;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         margin-top: 16px;
+        <span class="pill">{{ ride.get_ride_type_display }}</span>
     }
 
     .ride-title {
@@ -90,6 +91,30 @@
         </div>
         <a class="btn-signup" href="{% url 'rides:create' %}">Post a ride</a>
     </div>
+
+    <form method="GET" style="margin-bottom: 20px; display: flex; gap: 10px; flex-wrap: wrap;">
+
+    <!-- Search bar -->
+    <input
+        type="text"
+        name="search"
+        placeholder="Search by location..."
+        value="{{ search_query|default:'' }}"
+        style="padding: 10px; border-radius: 8px; border: 1px solid #ccc; flex: 1;"
+    >
+
+    <!-- Filter dropdown -->
+    <select name="type" style="padding: 10px; border-radius: 8px;">
+        <option value="">All Types</option>
+        <option value="theme_park">Theme Park</option>
+        <option value="sports">Sports Game</option>
+        <option value="concert">Concert</option>
+        <option value="airport">Airport</option>
+        <option value="other">Other</option>
+    </select>
+
+    <button type="submit" class="btn-signup">Filter</button>
+</form>
 
     {% if rides %}
         {% for ride in rides %}
