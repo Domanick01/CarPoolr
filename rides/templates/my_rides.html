@@ -59,6 +59,23 @@
 
     .btn-cancel:hover { background-color: #b91c1c; }
 
+    .btn-review {
+        background-color: #16a34a;
+        color: #fff;
+        border: none;
+        padding: 8px 16px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        border-radius: 8px;
+        text-decoration: none;
+        display: inline-block;
+    }
+
+    .btn-review:hover {
+        background-color: #15803d;
+    }
+
     .empty {
         color: #666;
         margin-top: 16px;
@@ -155,6 +172,7 @@
                     <p>Seats available: {{ req.ride.seats_available }} / {{ req.ride.total_seats }}</p>
                 </div>
                 <div class="ride-actions">
+                    <a class="btn-review" href="{% url 'rides:leave_review' req.pk %}">Leave a review</a>
                     <button class="btn-cancel" onclick="openModal({{ req.pk }}, '{{ req.ride.driver.username }}')">Cancel Ride</button>
                 </div>
             </div>

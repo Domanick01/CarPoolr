@@ -30,6 +30,7 @@ class Ride(models.Model):
         """Remaining seats"""
         return max(self.total_seats - self.seats_taken(), 0)
 
+
 class RideRequest(models.Model):
     STATUS_CHOICES = [
         ('pending', 'Pending'),
@@ -48,3 +49,18 @@ class RideRequest(models.Model):
 
     def __str__(self):
         return f"{self.passenger.username} → {self.ride} ({self.status})"
+ 
+class Review(models.Model):
+    ride = models.ForeignKey(Ride, on_delete=models.CASCADE, related_name="reviews")
+    reviewee = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="reviews_received")
+    reviewer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="reviews_written")
+    rating = models.PositiveSmallIntegerField()
+    comment = models.TextField(blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ['ride', 'reviewer', 'reviewee']
+        ordering = ["-created_at"]
+
+    def __str__(self):
+        return f"Review for {self.reviewee.username} by {self.reviewer.username}"

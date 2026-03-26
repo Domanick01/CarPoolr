@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import Ride
+from .models import Ride, Review
 
 
 class RideForm(forms.ModelForm):
@@ -11,3 +11,13 @@ class RideForm(forms.ModelForm):
     class Meta:
         model = Ride
         fields = ["pickup_location", "destination", "price", "departure_time"]
+
+
+class ReviewForm(forms.ModelForm):
+    class Meta:
+        model = Review
+        fields = ["rating", "comment"]
+        widgets = {
+            "rating": forms.NumberInput(attrs={"min": 1, "max": 5}),
+            "comment": forms.Textarea(attrs={"rows": 4}),
+        }
