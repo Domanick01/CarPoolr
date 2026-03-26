@@ -2,7 +2,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_http_methods
-
+from django.utils import timezone
 from .forms import RideForm, ReviewForm
 from .models import Ride, RideRequest, Review
 
@@ -45,6 +45,11 @@ def leave_review(request, request_pk):
         status="accepted",
     )
 
+    # Block review if ride hasn't happened yet
+    if ride_request.ride.departure_time > timezone.now():
+        messages.error(request, "You can only leave a review after the ride has completed.")
+        return redirect("rides:my_rides")
+
     existing_review = Review.objects.filter(
         ride=ride_request.ride,
         reviewer=request.user,
@@ -59,7 +64,7 @@ def leave_review(request, request_pk):
         if form.is_valid():
             review = form.save(commit=False)
             review.ride = ride_request.ride
-            review.driver = ride_request.ride.driver
+            review.reviewee = ride_request.ride.driver
             review.reviewer = request.user
             review.save()
             messages.success(request, "Your review was submitted.")
@@ -69,14 +74,13 @@ def leave_review(request, request_pk):
 
     return render(
         request,
-        "leave_review.html",
+        "rides/leave_review.html",
         {
             "form": form,
             "ride_request": ride_request,
             "existing_review": existing_review,
         },
     )
-
 
 @login_required
 @require_http_methods(["GET", "POST"])

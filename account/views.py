@@ -4,7 +4,7 @@ from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.views.decorators.http import require_http_methods
-
+from django.shortcuts import render, redirect, get_object_or_404
 from .forms import CustomUserRegistrationForm
 from rides.models import Ride, RideRequest, Review
 
@@ -113,18 +113,24 @@ def home_view(request):
 
 
 @login_required
-def profile_view(request):
-    """
-    User profile page with live ride and review stats.
-    """
-    offered_rides = Ride.objects.filter(driver=request.user).count()
+def profile_view(request, username=None):
+    from django.contrib.auth import get_user_model
+    User = get_user_model()
+
+    # If no username given, show logged in user's own profile
+    if username:
+        profile_user = get_object_or_404(User, username=username)
+    else:
+        profile_user = request.user
+
+    offered_rides = Ride.objects.filter(driver=profile_user).count()
     taken_rides = RideRequest.objects.filter(
-        passenger=request.user,
+        passenger=profile_user,
         status='accepted'
     ).count()
 
-    received_reviews_qs = Review.objects.filter(driver=request.user)
-    written_reviews_qs = Review.objects.filter(reviewer=request.user)
+    received_reviews_qs = Review.objects.filter(reviewee=profile_user)
+    written_reviews_qs = Review.objects.filter(reviewer=profile_user)
 
     average_rating = received_reviews_qs.aggregate(avg=Avg('rating'))['avg']
     average_rating = round(average_rating, 1) if average_rating is not None else None
@@ -135,7 +141,8 @@ def profile_view(request):
 
     context = {
         'title': 'Profile',
-        'user': request.user,
+        'profile_user': profile_user,
+        'is_own_profile': profile_user == request.user,
         'offered_rides': offered_rides,
         'taken_rides': taken_rides,
         'average_rating': average_rating,

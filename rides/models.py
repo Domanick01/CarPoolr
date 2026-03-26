@@ -49,18 +49,18 @@ class RideRequest(models.Model):
 
     def __str__(self):
         return f"{self.passenger.username} → {self.ride} ({self.status})"
-
-
+ 
 class Review(models.Model):
     ride = models.ForeignKey(Ride, on_delete=models.CASCADE, related_name="reviews")
-    driver = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="driver_reviews")
-    reviewer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="written_reviews")
+    reviewee = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="reviews_received")
+    reviewer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="reviews_written")
     rating = models.PositiveSmallIntegerField()
     comment = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
+        unique_together = ['ride', 'reviewer', 'reviewee']
         ordering = ["-created_at"]
 
     def __str__(self):
-        return f"Review for {self.driver.username} by {self.reviewer.username}"
+        return f"Review for {self.reviewee.username} by {self.reviewer.username}"

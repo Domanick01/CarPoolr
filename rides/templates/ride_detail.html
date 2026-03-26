@@ -96,7 +96,11 @@
     <div class="card">
         <span class="pill">Depart: {{ ride.departure_time }}</span>
         <span class="pill">Price: ${{ ride.price }}</span>
-        <div class="driver">Driver: {{ ride.driver.username }}</div>
+        <div class="driver">
+            Driver: <a href="{% url 'account:profile_user' ride.driver.username %}" style="color: #dc2626; text-decoration: none;">
+                {{ ride.driver.username }}
+            </a>
+        </div>
         <div class="pill">Seats: {{ ride.seats_taken }} / {{ ride.total_seats }} taken</div>
         <div class="pill">Seats available: {{ ride.seats_available }}</div>
     </div>
