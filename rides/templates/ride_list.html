@@ -93,27 +93,54 @@
     </div>
 
     <form method="GET" style="margin-bottom: 20px; display: flex; gap: 10px; flex-wrap: wrap;">
+<form method="GET" style="margin-bottom: 20px; display: flex; gap: 10px; flex-wrap: wrap;">
 
-    <!-- Search bar -->
+    <!-- Search -->
     <input
         type="text"
         name="search"
         placeholder="Search by location..."
-        value="{{ search_query|default:'' }}"
+        value="{{ request.GET.search }}"
         style="padding: 10px; border-radius: 8px; border: 1px solid #ccc; flex: 1;"
     >
 
-    <!-- Filter dropdown -->
-    <select name="type" style="padding: 10px; border-radius: 8px;">
-        <option value="">All Types</option>
+    <!-- Category -->
+    <select name="category" style="padding: 10px; border-radius: 8px;">
+        <option value="">All Categories</option>
         <option value="theme_park">Theme Park</option>
         <option value="sports">Sports Game</option>
         <option value="concert">Concert</option>
-        <option value="airport">Airport</option>
+        <option value="school">School</option>
         <option value="other">Other</option>
     </select>
 
-    <button type="submit" class="btn-signup">Filter</button>
+    <!-- Max Price -->
+    <input
+        type="number"
+        name="max_price"
+        placeholder="Max Price"
+        value="{{ request.GET.max_price }}"
+        style="padding: 10px; border-radius: 8px; border: 1px solid #ccc; width: 120px;"
+    >
+
+    <!-- Date -->
+    <input
+        type="date"
+        name="date"
+        value="{{ request.GET.date }}"
+        style="padding: 10px; border-radius: 8px; border: 1px solid #ccc;"
+    >
+
+    <!-- Sort -->
+    <select name="sort" style="padding: 10px; border-radius: 8px;">
+        <option value="">Sort By</option>
+        <option value="price">Price (Low → High)</option>
+        <option value="-price">Price (High → Low)</option>
+        <option value="departure_time">Earliest Departure</option>
+        <option value="-departure_time">Latest Departure</option>
+    </select>
+
+    <button type="submit" class="btn-signup">Apply</button>
 </form>
 
     {% if rides %}
