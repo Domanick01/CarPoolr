@@ -178,13 +178,21 @@ def ride_request_respond(request, request_pk):
 
 @login_required
 def my_rides(request):
-    # Get all ride requests by this user that have been accepted
-    accepted_rides = RideRequest.objects.filter(
+    now = timezone.now()
+    
+    all_rides = RideRequest.objects.filter(
         passenger=request.user,
         status='accepted'
-    ).select_related('ride', 'ride__driver')  # fetch related ride & driver info
+    ).select_related('ride', 'ride__driver')
 
-    return render(request, 'my_rides.html', {'accepted_rides': accepted_rides})
+    upcoming_rides = all_rides.filter(ride__departure_time__gte=now)
+    past_rides = all_rides.filter(ride__departure_time__lt=now)
+
+    return render(request, 'my_rides.html', {
+        'upcoming_rides': upcoming_rides,
+        'past_rides': past_rides,
+    })
+
 
 @login_required
 @require_http_methods(["POST"])

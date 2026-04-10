@@ -17,6 +17,12 @@
         margin-bottom: 24px;
     }
 
+    h2 {
+        font-size: 24px;
+        font-weight: 700;
+        margin-bottom: 12px;
+    }
+
     .card {
         background: #fff;
         border-radius: 12px;
@@ -72,14 +78,16 @@
         display: inline-block;
     }
 
-    .btn-review:hover {
-        background-color: #15803d;
-    }
+    .btn-review:hover { background-color: #15803d; }
 
     .empty {
         color: #666;
         margin-top: 16px;
         font-style: italic;
+    }
+
+    .section {
+        margin-top: 32px;
     }
 
     /* Modal styling */
@@ -159,27 +167,50 @@
 <main class="page">
     <h1>My Rides</h1>
 
-    {% if accepted_rides %}
-        {% for req in accepted_rides %}
-            <div class="card">
-                <div class="ride-info">
-                    Driver: <span>{{ req.ride.driver.username }}</span><br>
-                    From <strong>{{ req.ride.pickup_location }}</strong> 
-                    to <strong>{{ req.ride.destination }}</strong><br>
-                    Departure: {{ req.ride.departure_time|date:"M d, Y H:i" }}
+    <div class="section">
+        <h2>Upcoming Rides</h2>
+        {% if upcoming_rides %}
+            {% for req in upcoming_rides %}
+                <div class="card">
+                    <div class="ride-info">
+                        Driver: <span>{{ req.ride.driver.username }}</span><br>
+                        From <strong>{{ req.ride.pickup_location }}</strong>
+                        to <strong>{{ req.ride.destination }}</strong><br>
+                        Departure: {{ req.ride.departure_time|date:"M d, Y H:i" }}
+                    </div>
+                    <div>
+                        <p>Seats available: {{ req.ride.seats_available }} / {{ req.ride.total_seats }}</p>
+                    </div>
+                    <div class="ride-actions">
+                        <button class="btn-cancel" onclick="openModal({{ req.pk }}, '{{ req.ride.driver.username }}')">Cancel Ride</button>
+                    </div>
                 </div>
-                <div>
-                    <p>Seats available: {{ req.ride.seats_available }} / {{ req.ride.total_seats }}</p>
+            {% endfor %}
+        {% else %}
+            <p class="empty">No upcoming rides.</p>
+        {% endif %}
+    </div>
+
+    <div class="section">
+        <h2>Past Rides</h2>
+        {% if past_rides %}
+            {% for req in past_rides %}
+                <div class="card">
+                    <div class="ride-info">
+                        Driver: <span>{{ req.ride.driver.username }}</span><br>
+                        From <strong>{{ req.ride.pickup_location }}</strong>
+                        to <strong>{{ req.ride.destination }}</strong><br>
+                        Departure: {{ req.ride.departure_time|date:"M d, Y H:i" }}
+                    </div>
+                    <div class="ride-actions">
+                        <a class="btn-review" href="{% url 'rides:leave_review' req.pk %}">Leave a review</a>
+                    </div>
                 </div>
-                <div class="ride-actions">
-                    <a class="btn-review" href="{% url 'rides:leave_review' req.pk %}">Leave a review</a>
-                    <button class="btn-cancel" onclick="openModal({{ req.pk }}, '{{ req.ride.driver.username }}')">Cancel Ride</button>
-                </div>
-            </div>
-        {% endfor %}
-    {% else %}
-        <p class="empty">You have no accepted rides.</p>
-    {% endif %}
+            {% endfor %}
+        {% else %}
+            <p class="empty">No past rides.</p>
+        {% endif %}
+    </div>
 </main>
 
 <!-- Modal -->
@@ -212,7 +243,6 @@ function closeModal() {
     modal.style.display = 'none';
 }
 
-// Close modal when clicking outside of it
 window.onclick = function(event) {
     if (event.target == modal) {
         closeModal();
