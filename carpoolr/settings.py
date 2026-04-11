@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'location_field.apps.DefaultConfig', # This is being used in the events model for direct location (Another seperate pip)
     'events',
     'rides',
+    'chat',
 ]
 
 MIDDLEWARE = [

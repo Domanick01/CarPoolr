@@ -1,0 +1,506 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Chat with {{ other_user.username }} - CarPoolr{% endblock %}
+
+{% block styles %}
+<style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        background: #f5f5f5;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .chat-page {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        max-width: 780px;
+        width: 100%;
+        margin: 0 auto;
+        height: calc(100vh - 70px); /* account for your nav */
+        padding: 0 16px;
+    }
+
+    /* ── Header ── */
+    .chat-header {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 18px 0 14px;
+        border-bottom: 1px solid #ececec;
+        background: #f5f5f5;
+        position: sticky;
+        top: 0;
+        z-index: 10;
+    }
+
+    .back-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 38px;
+        height: 38px;
+        border-radius: 10px;
+        background: #fff;
+        color: #dc2626;
+        text-decoration: none;
+        font-size: 20px;
+        font-weight: 700;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+        transition: background 0.2s, transform 0.2s;
+        flex-shrink: 0;
+    }
+
+    .back-btn:hover {
+        background: #dc2626;
+        color: #fff;
+        transform: translateX(-2px);
+    }
+
+    .header-avatar {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #dc2626, #f87171);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-weight: 800;
+        font-size: 19px;
+        flex-shrink: 0;
+        box-shadow: 0 4px 12px rgba(220,38,38,0.25);
+    }
+
+    .header-info .name {
+        font-size: 17px;
+        font-weight: 700;
+        color: #111;
+        line-height: 1.2;
+    }
+
+    .header-info .status {
+        font-size: 13px;
+        color: #22c55e;
+        font-weight: 500;
+    }
+
+    /* ── Message area ── */
+    .messages-area {
+        flex: 1;
+        overflow-y: auto;
+        padding: 20px 0;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        scroll-behavior: smooth;
+    }
+
+    .messages-area::-webkit-scrollbar { width: 4px; }
+    .messages-area::-webkit-scrollbar-thumb {
+        background: #ddd;
+        border-radius: 4px;
+    }
+
+    /* Date divider */
+    .date-divider {
+        text-align: center;
+        margin: 16px 0 8px;
+    }
+
+    .date-divider span {
+        background: #e5e7eb;
+        color: #888;
+        font-size: 12px;
+        font-weight: 600;
+        padding: 4px 14px;
+        border-radius: 999px;
+    }
+
+    /* Bubbles */
+    .bubble-row {
+        display: flex;
+        align-items: flex-end;
+        gap: 8px;
+        animation: popIn 0.2s ease both;
+    }
+
+    @keyframes popIn {
+        from { opacity: 0; transform: scale(0.92) translateY(6px); }
+        to   { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    .bubble-row.mine { justify-content: flex-end; }
+    .bubble-row.theirs { justify-content: flex-start; }
+
+    .bubble-avatar {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #dc2626, #f87171);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-weight: 700;
+        font-size: 13px;
+        flex-shrink: 0;
+        margin-bottom: 2px;
+    }
+
+    .bubble-row.mine .bubble-avatar { display: none; }
+
+    .bubble {
+        max-width: 68%;
+        padding: 11px 16px;
+        border-radius: 20px;
+        font-size: 15px;
+        line-height: 1.45;
+        word-break: break-word;
+        position: relative;
+    }
+
+    .bubble-row.mine .bubble {
+        background: linear-gradient(135deg, #dc2626, #ef4444);
+        color: #fff;
+        border-bottom-right-radius: 6px;
+        box-shadow: 0 4px 14px rgba(220,38,38,0.25);
+    }
+
+    .bubble-row.theirs .bubble {
+        background: #fff;
+        color: #222;
+        border-bottom-left-radius: 6px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    .bubble-time {
+        font-size: 11px;
+        margin-top: 4px;
+        opacity: 0.65;
+        text-align: right;
+        display: block;
+    }
+
+    .bubble-row.theirs .bubble-time { text-align: left; color: #999; }
+
+    /* Empty state */
+    .empty-chat {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        padding: 40px 0;
+        animation: fadeIn 0.4s ease;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to   { opacity: 1; }
+    }
+
+    .empty-chat .wave {
+        font-size: 52px;
+        animation: wave 1.6s infinite;
+        transform-origin: 70% 70%;
+        display: inline-block;
+    }
+
+    @keyframes wave {
+        0%,100% { transform: rotate(0deg); }
+        20%     { transform: rotate(18deg); }
+        40%     { transform: rotate(-10deg); }
+        60%     { transform: rotate(14deg); }
+        80%     { transform: rotate(-6deg); }
+    }
+
+    .empty-chat p {
+        font-size: 16px;
+        color: #aaa;
+        font-weight: 500;
+    }
+
+    /* ── Input bar ── */
+    .input-bar {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 12px 0 20px;
+        background: #f5f5f5;
+        position: sticky;
+        bottom: 0;
+    }
+
+    .input-wrap {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        background: #fff;
+        border-radius: 999px;
+        padding: 0 18px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        border: 2px solid transparent;
+        transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .input-wrap:focus-within {
+        border-color: #dc2626;
+        box-shadow: 0 2px 16px rgba(220,38,38,0.15);
+    }
+
+    .input-wrap input {
+        flex: 1;
+        border: none;
+        outline: none;
+        padding: 14px 0;
+        font-size: 15px;
+        background: transparent;
+        color: #222;
+    }
+
+    .input-wrap input::placeholder { color: #bbb; }
+
+    .emoji-btn {
+        background: none;
+        border: none;
+        font-size: 22px;
+        cursor: pointer;
+        padding: 0 4px;
+        opacity: 0.6;
+        transition: opacity 0.2s, transform 0.2s;
+    }
+
+    .emoji-btn:hover { opacity: 1; transform: scale(1.2); }
+
+    .send-btn {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #dc2626, #ef4444);
+        border: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 14px rgba(220,38,38,0.35);
+        transition: transform 0.15s, box-shadow 0.15s;
+        flex-shrink: 0;
+    }
+
+    .send-btn:hover {
+        transform: scale(1.08);
+        box-shadow: 0 6px 20px rgba(220,38,38,0.45);
+    }
+
+    .send-btn:active { transform: scale(0.95); }
+
+    .send-btn svg {
+        width: 20px;
+        height: 20px;
+        fill: #fff;
+        transform: translateX(1px);
+    }
+
+    /* Emoji picker */
+    .emoji-picker {
+        position: absolute;
+        bottom: 80px;
+        left: 16px;
+        background: #fff;
+        border-radius: 16px;
+        padding: 12px;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+        display: none;
+        flex-wrap: wrap;
+        gap: 6px;
+        width: 260px;
+        z-index: 100;
+        animation: popIn 0.2s ease;
+    }
+
+    .emoji-picker.open { display: flex; }
+
+    .emoji-picker button {
+        background: none;
+        border: none;
+        font-size: 24px;
+        cursor: pointer;
+        padding: 4px;
+        border-radius: 8px;
+        transition: background 0.15s, transform 0.15s;
+    }
+
+    .emoji-picker button:hover {
+        background: #fef2f2;
+        transform: scale(1.2);
+    }
+
+    /* Typing indicator */
+    .typing-indicator {
+        display: none;
+        align-items: center;
+        gap: 8px;
+        padding: 4px 0 8px;
+    }
+
+    .typing-dots {
+        display: flex;
+        gap: 4px;
+        background: #fff;
+        padding: 10px 14px;
+        border-radius: 20px;
+        border-bottom-left-radius: 6px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    .typing-dots span {
+        width: 7px;
+        height: 7px;
+        background: #ccc;
+        border-radius: 50%;
+        animation: typingDot 1.2s infinite;
+    }
+
+    .typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+    .typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+    @keyframes typingDot {
+        0%, 60%, 100% { transform: translateY(0); background: #ccc; }
+        30%           { transform: translateY(-6px); background: #dc2626; }
+    }
+
+    @media (max-width: 768px) {
+        .chat-page { padding: 0 10px; }
+        .bubble { max-width: 82%; font-size: 14px; }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="chat-page">
+
+    <!-- Header -->
+    <div class="chat-header">
+        <a href="{% url 'chat:inbox' %}" class="back-btn">‹</a>
+        <div class="header-avatar">{{ other_user.username|first|upper }}</div>
+        <div class="header-info">
+            <div class="name">{{ other_user.username }}</div>
+            <div class="status">● Online</div>
+        </div>
+    </div>
+
+    <!-- Messages -->
+    <div class="messages-area" id="messagesArea">
+
+        {% if messages %}
+            {% for msg in messages %}
+                <div class="bubble-row {% if msg.sender == request.user %}mine{% else %}theirs{% endif %}">
+                    {% if msg.sender != request.user %}
+                        <div class="bubble-avatar">{{ msg.sender.username|first|upper }}</div>
+                    {% endif %}
+                    <div class="bubble">
+                        {{ msg.content }}
+                        <span class="bubble-time">{{ msg.timestamp|date:"g:i A" }}</span>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="empty-chat">
+                <span class="wave">👋</span>
+                <p>Say hello to {{ other_user.username }}!</p>
+            </div>
+        {% endif %}
+
+        <!-- Typing indicator (visual only) -->
+        <div class="typing-indicator" id="typingIndicator">
+            <div class="bubble-avatar">{{ other_user.username|first|upper }}</div>
+            <div class="typing-dots">
+                <span></span><span></span><span></span>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Emoji picker -->
+    <div class="emoji-picker" id="emojiPicker">
+        {% for emoji in "😀😂😍🥰😎👍🔥❤️🎉✅🚗🤝💯😅🙏👋😊🤣💪" %}
+            <button type="button" onclick="insertEmoji('{{ emoji }}')">{{ emoji }}</button>
+        {% endfor %}
+    </div>
+
+    <!-- Input bar -->
+    <form method="POST" class="input-bar" id="chatForm">
+        {% csrf_token %}
+        <div class="input-wrap">
+            <button type="button" class="emoji-btn" id="emojiToggle" title="Emoji">😊</button>
+            <input
+                type="text"
+                name="content"
+                id="msgInput"
+                placeholder="Type a message…"
+                autocomplete="off"
+            />
+        </div>
+        <button type="submit" class="send-btn" id="sendBtn">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M2 21l21-9L2 3v7l15 2-15 2z"/>
+            </svg>
+        </button>
+    </form>
+</div>
+
+<script>
+    // ── Auto-scroll to bottom ──
+    const area = document.getElementById('messagesArea');
+    area.scrollTop = area.scrollHeight;
+
+    // ── Send button pulse when input has text ──
+    const input = document.getElementById('msgInput');
+    const sendBtn = document.getElementById('sendBtn');
+
+    input.addEventListener('input', () => {
+        sendBtn.style.transform = input.value.trim() ? 'scale(1.05)' : 'scale(1)';
+    });
+
+    // ── Form submit: animate then submit ──
+    document.getElementById('chatForm').addEventListener('submit', function(e) {
+        if (!input.value.trim()) { e.preventDefault(); return; }
+        sendBtn.style.transform = 'scale(0.9)';
+        setTimeout(() => sendBtn.style.transform = 'scale(1)', 150);
+    });
+
+    // ── Emoji picker toggle ──
+    const picker = document.getElementById('emojiPicker');
+    document.getElementById('emojiToggle').addEventListener('click', (e) => {
+        e.stopPropagation();
+        picker.classList.toggle('open');
+    });
+
+    document.addEventListener('click', () => picker.classList.remove('open'));
+    picker.addEventListener('click', e => e.stopPropagation());
+
+    function insertEmoji(emoji) {
+        input.value += emoji;
+        input.focus();
+        picker.classList.remove('open');
+    }
+
+    // ── Enter to send ──
+    input.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            if (input.value.trim()) document.getElementById('chatForm').submit();
+        }
+    });
+
+    // ── Auto-focus input ──
+    input.focus();
+</script>
+{% endblock %}

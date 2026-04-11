@@ -19,8 +19,8 @@
 
     .card {
         background: #fff;
-        border-radius: 12px;
-        padding: 20px;
+        border-radius: 16px;
+        padding: 24px;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         margin-top: 16px;
         display: flex;
@@ -28,11 +28,20 @@
         align-items: center;
         gap: 16px;
         flex-wrap: wrap;
+        transition: box-shadow 0.2s, transform 0.2s;
+        border: 2px solid transparent;
+    }
+
+    .card:hover {
+        box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+        transform: translateY(-2px);
+        border-color: #f0f0f0;
     }
 
     .ride-info {
         font-size: 16px;
         color: #333;
+        line-height: 1.7;
     }
 
     .ride-info span {
@@ -40,24 +49,75 @@
         color: #000;
     }
 
+    .ride-meta {
+        font-size: 14px;
+        color: #888;
+        margin-top: 4px;
+    }
+
     .ride-actions {
         display: flex;
-        gap: 8px;
+        gap: 10px;
+        align-items: center;
+        flex-wrap: wrap;
     }
 
     .btn-cancel {
-        background-color: #dc2626;
-        color: #fff;
-        border: none;
-        padding: 8px 16px;
+        background-color: #fff;
+        color: #dc2626;
+        border: 2px solid #dc2626;
+        padding: 9px 18px;
         font-size: 14px;
         font-weight: 600;
         cursor: pointer;
-        border-radius: 8px;
-        transition: background-color 0.3s;
+        border-radius: 10px;
+        transition: all 0.2s;
     }
 
-    .btn-cancel:hover { background-color: #b91c1c; }
+    .btn-cancel:hover {
+        background-color: #dc2626;
+        color: #fff;
+    }
+
+    .btn-chat {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        background: linear-gradient(135deg, #dc2626, #ef4444);
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        border-radius: 10px;
+        text-decoration: none;
+        box-shadow: 0 4px 12px rgba(220,38,38,0.25);
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .btn-chat:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 18px rgba(220,38,38,0.35);
+    }
+
+    .btn-chat:active { transform: scale(0.97); }
+
+    .btn-chat .chat-icon {
+        font-size: 16px;
+    }
+
+    /* Seats badge */
+    .seats-badge {
+        display: inline-block;
+        background: #f3f4f6;
+        color: #555;
+        font-size: 13px;
+        font-weight: 600;
+        padding: 4px 12px;
+        border-radius: 999px;
+        margin-top: 6px;
+    }
 
     .empty {
         color: #666;
@@ -68,36 +128,55 @@
     /* Modal styling */
     .modal-overlay {
         position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0,0,0,0.5);
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: rgba(0,0,0,0.45);
         display: none;
         justify-content: center;
         align-items: center;
         z-index: 1000;
+        backdrop-filter: blur(2px);
+        animation: fadeIn 0.2s ease;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to   { opacity: 1; }
     }
 
     .modal {
         background: #fff;
-        padding: 24px;
-        border-radius: 12px;
-        max-width: 400px;
+        padding: 32px;
+        border-radius: 20px;
+        max-width: 420px;
         width: 90%;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        box-shadow: 0 12px 40px rgba(0,0,0,0.18);
         text-align: center;
+        animation: slideUp 0.25s ease;
+    }
+
+    @keyframes slideUp {
+        from { transform: translateY(20px); opacity: 0; }
+        to   { transform: translateY(0); opacity: 1; }
+    }
+
+    .modal-icon {
+        font-size: 44px;
+        margin-bottom: 12px;
     }
 
     .modal h2 {
-        margin-bottom: 16px;
+        margin-bottom: 10px;
         font-size: 22px;
+        font-weight: 800;
         color: #000;
     }
 
     .modal p {
-        margin-bottom: 24px;
-        color: #333;
+        margin-bottom: 28px;
+        color: #666;
+        font-size: 15px;
+        line-height: 1.5;
     }
 
     .modal-buttons {
@@ -106,14 +185,17 @@
         gap: 12px;
     }
 
-    .modal-buttons button {
-        padding: 10px 20px;
-        font-weight: 600;
-        border-radius: 8px;
+    .modal-buttons button,
+    .modal-buttons .btn-confirm-link {
+        padding: 11px 24px;
+        font-weight: 700;
+        border-radius: 10px;
         border: none;
         cursor: pointer;
-        font-size: 14px;
-        transition: background-color 0.3s;
+        font-size: 15px;
+        transition: all 0.2s;
+        text-decoration: none;
+        display: inline-block;
     }
 
     .btn-confirm {
@@ -124,16 +206,18 @@
     .btn-confirm:hover { background-color: #b91c1c; }
 
     .btn-cancel-modal {
-        background-color: #ccc;
-        color: #000;
+        background-color: #f3f4f6;
+        color: #333;
     }
 
-    .btn-cancel-modal:hover { background-color: #999; }
+    .btn-cancel-modal:hover { background-color: #e5e7eb; }
 
     @media (max-width: 768px) {
         .page { padding: 24px; }
         h1 { font-size: 28px; }
         .card { flex-direction: column; align-items: flex-start; }
+        .ride-actions { width: 100%; }
+        .btn-chat, .btn-cancel { flex: 1; text-align: center; justify-content: center; }
     }
 </style>
 {% endblock %}
@@ -147,15 +231,27 @@
             <div class="card">
                 <div class="ride-info">
                     Driver: <span>{{ req.ride.driver.username }}</span><br>
-                    From <strong>{{ req.ride.pickup_location }}</strong> 
+                    From <strong>{{ req.ride.pickup_location }}</strong>
                     to <strong>{{ req.ride.destination }}</strong><br>
                     Departure: {{ req.ride.departure_time|date:"M d, Y H:i" }}
+                    <br>
+                    <span class="seats-badge">
+                        🪑 {{ req.ride.seats_available }} / {{ req.ride.total_seats }} seats available
+                    </span>
                 </div>
-                <div>
-                    <p>Seats available: {{ req.ride.seats_available }} / {{ req.ride.total_seats }}</p>
-                </div>
+
                 <div class="ride-actions">
-                    <button class="btn-cancel" onclick="openModal({{ req.pk }}, '{{ req.ride.driver.username }}')">Cancel Ride</button>
+                    <!-- Chat with driver -->
+                    <a href="{% url 'chat:conversation' req.ride.driver.id %}"
+                       class="btn-chat">
+                        <span class="chat-icon">💬</span> Message Driver
+                    </a>
+
+                    <!-- Cancel -->
+                    <button class="btn-cancel"
+                            onclick="openModal({{ req.pk }}, '{{ req.ride.driver.username }}')">
+                        Cancel Ride
+                    </button>
                 </div>
             </div>
         {% endfor %}
@@ -164,41 +260,39 @@
     {% endif %}
 </main>
 
-<!-- Modal -->
+<!-- Cancel Modal -->
 <div id="cancelModal" class="modal-overlay">
     <div class="modal">
-        <h2>Cancel Ride</h2>
+        <div class="modal-icon">🚗</div>
+        <h2>Cancel Ride?</h2>
         <p id="modal-text"></p>
         <div class="modal-buttons">
             <form id="modal-form" method="post" action="">
                 {% csrf_token %}
                 <button type="submit" class="btn-confirm">Yes, Cancel</button>
             </form>
-            <button class="btn-cancel-modal" onclick="closeModal()">No, Keep Ride</button>
+            <button class="btn-cancel-modal" onclick="closeModal()">Keep Ride</button>
         </div>
     </div>
 </div>
 
 <script>
-let modal = document.getElementById('cancelModal');
-let modalText = document.getElementById('modal-text');
-let modalForm = document.getElementById('modal-form');
+    const modal = document.getElementById('cancelModal');
+    const modalText = document.getElementById('modal-text');
+    const modalForm = document.getElementById('modal-form');
 
-function openModal(requestPk, driverName) {
-    modal.style.display = 'flex';
-    modalText.textContent = `Are you sure you want to cancel your ride with ${driverName}? This action cannot be undone.`;
-    modalForm.action = `{% url 'rides:cancel_ride' 0 %}`.replace('/0/', `/${requestPk}/`);
-}
-
-function closeModal() {
-    modal.style.display = 'none';
-}
-
-// Close modal when clicking outside of it
-window.onclick = function(event) {
-    if (event.target == modal) {
-        closeModal();
+    function openModal(requestPk, driverName) {
+        modal.style.display = 'flex';
+        modalText.textContent = `Are you sure you want to cancel your ride with ${driverName}? This cannot be undone.`;
+        modalForm.action = `{% url 'rides:cancel_ride' 0 %}`.replace('/0/', `/${requestPk}/`);
     }
-}
+
+    function closeModal() {
+        modal.style.display = 'none';
+    }
+
+    window.onclick = function(e) {
+        if (e.target === modal) closeModal();
+    }
 </script>
 {% endblock %}
