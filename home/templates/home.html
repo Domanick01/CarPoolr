@@ -5,179 +5,146 @@
 
 {% block styles %}
 <style>
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-    }
-
-    body {
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-        background-color: #f5f5f5;
-        color: #333;
-    }
-
-    nav {
-        background-color: #000;
-        padding: 16px 48px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        position: sticky;
-        top: 0;
-        z-index: 1000;
-    }
-
-    .logo {
-        color: #fff;
-        font-size: 28px;
-        font-weight: 600;
-        text-decoration: none;
-    }
-
-    .nav-buttons {
-        display: flex;
-        gap: 16px;
-        align-items: center;
-    }
-
-    .btn-signin {
-        background: transparent;
-        color: #fff;
-        border: none;
-        padding: 10px 24px;
-        font-size: 16px;
-        font-weight: 500;
-        cursor: pointer;
-        border-radius: 8px;
-        transition: background-color 0.3s;
-        text-decoration: none;
-        display: inline-block;
-    }
-
-    .btn-signin:hover {
-        background-color: #1a1a1a;
-    }
-
-    .btn-signup {
-        background-color: #dc2626;
-        color: #fff;
-        border: none;
-        padding: 10px 24px;
-        font-size: 16px;
-        font-weight: 600;
-        cursor: pointer;
-        border-radius: 8px;
-        transition: background-color 0.3s;
-        text-decoration: none;
-        display: inline-block;
-    }
-
-    .btn-signup:hover {
-        background-color: #b91c1c;
-    }
-
     .hero {
-        padding: 80px 48px;
+        padding: 72px 48px;
         max-width: 1400px;
         margin: 0 auto;
     }
 
     .hero-layout {
-        display: flex;
+        display: grid;
+        grid-template-columns: minmax(0, 1.1fr) minmax(320px, 0.9fr);
+        gap: 56px;
         align-items: center;
-        justify-content: space-between;
-        gap: 64px;
     }
 
     .hero-content {
-        flex: 1;
-        max-width: 800px;
+        max-width: 720px;
     }
 
-    .hero-media {
-        flex: 0 0 auto;
-        display: flex;
-        justify-content: center;
+    .eyebrow {
+        display: inline-flex;
         align-items: center;
-    }
-
-    .hero-image {
-        width: clamp(320px, 42vw, 640px);
-        height: auto;
-        aspect-ratio: 1 / 1;
-        object-fit: cover;
-        border-radius: 24px;
-        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.14);
-        background: #fff;
+        gap: 8px;
+        padding: 8px 14px;
+        margin-bottom: 18px;
+        border-radius: 999px;
+        background: rgba(225, 29, 72, 0.10);
+        color: #991b1b;
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: 0.02em;
     }
 
     h1 {
-        font-size: 56px;
-        font-weight: 700;
-        line-height: 1.1;
-        margin-bottom: 20px;
-        color: #000;
+        font-size: clamp(42px, 6vw, 68px);
+        line-height: 0.98;
+        letter-spacing: -0.06em;
+        margin-bottom: 18px;
+        color: #0b0b0f;
     }
 
     .hero-subtitle {
         font-size: 18px;
-        color: #666;
-        margin-bottom: 48px;
-        line-height: 1.5;
+        color: #5b6270;
+        max-width: 56ch;
+        line-height: 1.6;
+        margin-bottom: 28px;
     }
 
-    .search-card {
-        background: #fff;
-        border-radius: 12px;
-        padding: 40px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        max-width: 600px;
+    .hero-actions {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin-bottom: 24px;
     }
 
-    .btn-search {
+    .cta-primary,
+    .cta-secondary {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 48px;
+        padding: 0 18px;
+        border-radius: 999px;
+        text-decoration: none;
+        font-weight: 700;
+        transition: transform 0.18s ease, background-color 0.18s ease;
+    }
+
+    .cta-primary {
+        background: #e11d48;
+        color: #fff;
+        box-shadow: 0 14px 30px rgba(225, 29, 72, 0.22);
+    }
+
+    .cta-primary:hover {
+        background: #be123c;
+        transform: translateY(-1px);
+    }
+
+    .cta-secondary {
+        background: #111114;
+        color: #fff;
+    }
+
+    .cta-secondary:hover {
+        background: #000;
+        transform: translateY(-1px);
+    }
+
+    .hero-image {
         width: 100%;
-        background-color: #dc2626;
-        color: #fff;
-        border: none;
-        padding: 18px;
-        font-size: 18px;
-        font-weight: 600;
-        cursor: pointer;
-        border-radius: 8px;
-        margin-top: 0;
-        transition: background-color 0.3s;
+        max-width: 560px;
+        border-radius: 28px;
+        box-shadow: var(--shadow);
+        border: 1px solid rgba(17, 17, 20, 0.08);
+        object-fit: cover;
+        background: #fff;
     }
 
-    .btn-search:hover {
-        background-color: #b91c1c;
+    .feature-strip {
+        margin-top: 28px;
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 14px;
     }
 
-    .messages-bar {
-        background: #dc2626;
-        color: #fff;
-        padding: 12px 48px;
+    .feature {
+        background: rgba(255, 255, 255, 0.72);
+        border: 1px solid rgba(17, 17, 20, 0.08);
+        border-radius: 18px;
+        padding: 16px;
+        box-shadow: 0 10px 28px rgba(0,0,0,0.04);
+        backdrop-filter: blur(12px);
+    }
+
+    .feature strong {
+        display: block;
+        margin-bottom: 4px;
+        color: #0b0b0f;
+    }
+
+    .feature span {
+        color: #6b7280;
+        font-size: 14px;
+        line-height: 1.45;
     }
 
     @media (max-width: 1100px) {
         .hero-layout {
-            flex-direction: column;
-            align-items: flex-start;
+            grid-template-columns: 1fr;
         }
-        .hero-media {
-            width: 100%;
-        }
+
         .hero-image {
-            width: min(100%, 640px);
+            max-width: 680px;
         }
     }
 
     @media (max-width: 768px) {
-        nav { padding: 16px 24px; }
-        .hero { padding: 48px 24px; }
-        h1 { font-size: 40px; }
-        .search-card { padding: 24px; }
-        .logo { font-size: 24px; }
+        .hero {
+            padding: 44px 24px;
+        }
     }
 </style>
 {% endblock %}
@@ -187,22 +154,21 @@
     <div class="hero-layout">
         <div class="hero-content">
             <h1>Go anywhere with<br>CarPoolr</h1>
-            <p class="hero-subtitle">Connect with fellow travelers and make every trip more affordable</p>
+            <p class="hero-subtitle">
+                Connect with fellow travelers and make every trip more affordable, polished, and easy to use.
+            </p>
 
-            <div class="search-card">
-                <a href="{% url 'rides:list' %}" class="btn-search" style="display: inline-block; text-align: center; text-decoration: none;">
-                    View rides
-                </a>
+            <div class="hero-actions">
+                <a href="{% url 'rides:list' %}" class="cta-primary">View rides</a>
+                <a href="{% url 'account:register' %}" class="cta-secondary">Create account</a>
             </div>
         </div>
 
-        <div class="hero-media">
+        <div>
             <img
-                src="{% static 'home/rides-hero.png' %}"
-                alt="CarPoolr rides"
+                src="{% static 'home/carpoolr-hero.svg' %}"
+                alt="CarPoolr logo illustration"
                 class="hero-image"
-                width="1024"
-                height="1024"
             />
         </div>
     </div>
