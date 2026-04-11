@@ -11,7 +11,21 @@ from .models import Ride
 
 def ride_list(request):
     rides = Ride.objects.select_related("driver").all()
-    return render(request, "ride_list.html", {"rides": rides})
+
+    search_query = request.GET.get("search")
+    ride_type = request.GET.get("type")
+
+    if search_query:
+        rides = rides.filter(
+            pickup_location__icontains=search_query
+        ) | rides.filter(
+            destination__icontains=search_query
+        )
+
+    if ride_type:
+        rides = rides.filter(ride_type=ride_type)
+
+    return render(request, "ride_list.html", {"rides": rides, "search_query": search_query, "selected_type": ride_type})
 
 
 @login_required
