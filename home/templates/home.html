@@ -159,6 +159,74 @@
         padding: 12px 48px;
     }
 
+    /* Quick actions section */
+    .quick-actions {
+        max-width: 1400px;
+        margin: 0 auto 80px auto;
+        padding: 0 48px;
+    }
+
+    .quick-actions h2 {
+        font-size: 28px;
+        font-weight: 700;
+        margin-bottom: 24px;
+        color: #000;
+    }
+
+    .quick-actions-grid {
+        display: flex;
+        gap: 20px;
+        flex-wrap: wrap;
+    }
+
+    .action-card {
+        background: #fff;
+        border-radius: 16px;
+        padding: 32px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        text-decoration: none;
+        color: #333;
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        flex: 1;
+        min-width: 260px;
+        max-width: 360px;
+        transition: box-shadow 0.2s, transform 0.2s;
+        border: 2px solid transparent;
+    }
+
+    .action-card:hover {
+        box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+        transform: translateY(-2px);
+        border-color: #dc2626;
+    }
+
+    .action-icon {
+        width: 56px;
+        height: 56px;
+        border-radius: 14px;
+        background: #fef2f2;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 26px;
+        flex-shrink: 0;
+    }
+
+    .action-card-text strong {
+        display: block;
+        font-size: 18px;
+        font-weight: 700;
+        margin-bottom: 4px;
+        color: #000;
+    }
+
+    .action-card-text span {
+        font-size: 14px;
+        color: #888;
+    }
+
     @media (max-width: 1100px) {
         .hero-layout {
             flex-direction: column;
@@ -178,6 +246,8 @@
         h1 { font-size: 40px; }
         .search-card { padding: 24px; }
         .logo { font-size: 24px; }
+        .quick-actions { padding: 0 24px; }
+        .action-card { max-width: 100%; }
     }
 </style>
 {% endblock %}
@@ -207,4 +277,30 @@
         </div>
     </div>
 </section>
+
+{% if user.is_authenticated %}
+<section class="quick-actions">
+    <h2>Welcome back, {{ user.username }} 👋</h2>
+    <div class="quick-actions-grid">
+
+        <a href="{% url 'chat:inbox' %}" class="action-card">
+            <div class="action-icon">💬</div>
+            <div class="action-card-text">
+                <strong>Messages</strong>
+                <span>View your conversations</span>
+            </div>
+        </a>
+
+        <a href="{% url 'rides:list' %}" class="action-card">
+            <div class="action-icon">🚗</div>
+            <div class="action-card-text">
+                <strong>Browse Rides</strong>
+                <span>Find a ride to join</span>
+            </div>
+        </a>
+
+    </div>
+</section>
+{% endif %}
+
 {% endblock %}
