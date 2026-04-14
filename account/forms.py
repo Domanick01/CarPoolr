@@ -161,28 +161,28 @@ class CustomUserRegistrationForm(UserCreationForm):
         
         return password
     
-    def clean_Phone_Number(self):
-        """
-        Validate phone number format if provided
-        """
+    def clean_phone_number(self):
+
         phone = self.cleaned_data.get('phone_number')
-        
-        if phone:
-            
-            if not phone:
-                return None
-            
-            # Remove spaces and dashes
-            phone = phone.replace(' ', '').replace('-', '')
-            
-            
-            
-            # Check if it contains only digits and optional + at the start
-            if not re.match(r'^\+?\d{10,15}$', phone):
-                raise ValidationError(
-                    'Please enter a valid phone number (10-15 digits).'
-                )
-        
+
+        if not phone:
+            return None
+
+        # Remove spaces and dashes
+        phone = phone.replace(' ', '').replace('-', '')
+
+        # Check if it contains only digits and optional + at the start
+        if not re.match(r'^\+?\d{10,15}$', phone):
+            raise ValidationError(
+                'Please enter a valid phone number (10-15 digits).'
+            )
+
+        # Check uniqueness
+        if User.objects.filter(Phone_Number=phone).exists():
+            raise ValidationError(
+                'An account with this phone number already exists.'
+            )
+
         return phone
     
     def save(self, commit=True):
