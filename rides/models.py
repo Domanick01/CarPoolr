@@ -3,6 +3,16 @@ from django.db import models
 
 
 class Ride(models.Model):
+
+
+    CATEGORY_CHOICES = [
+        ('theme_park', 'Theme Park'),
+        ('sports', 'Sports Game'),
+        ('concert', 'Concert'),
+        ('school', 'School'),
+        ('other', 'Other'),
+    ]
+
     driver = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
@@ -10,6 +20,13 @@ class Ride(models.Model):
     )
     pickup_location = models.CharField(max_length=255)
     destination = models.CharField(max_length=255)
+
+    category = models.CharField(
+        max_length=20,
+        choices=CATEGORY_CHOICES,
+        default='other'
+    )
+
     price = models.DecimalField(max_digits=8, decimal_places=2)
     departure_time = models.DateTimeField()
     total_seats = models.PositiveIntegerField(default=4)
