@@ -117,3 +117,96 @@ def profile_view(request, username=None):
     }
 
     return render(request, 'account/profile.html', context)
+
+@login_required
+def settings_view(request):
+    return render(request, 'account/account_settings.html')
+
+@login_required
+@require_http_methods(["POST"])
+def settings_profile(request):
+    user = request.user
+    username = request.POST.get('username', '').strip()
+    first_name = request.POST.get('first_name', '').strip()
+    last_name = request.POST.get('last_name', '').strip()
+    age = request.POST.get('age', '').strip()
+    birthday = request.POST.get('birthday', '').strip()
+
+    import re
+    from django.contrib.auth import get_user_model
+    User = get_user_model()
+
+    if username and username != user.username:
+        if len(username) < 3:
+            messages.error(request, 'Username must be at least 3 characters.')
+            return redirect('account:settings')
+        if not re.match(r'^[\w]+$', username):
+            messages.error(request, 'Username can only contain letters, numbers, and underscores.')
+            return redirect('account:settings')
+        if User.objects.filter(username=username).exclude(pk=user.pk).exists():
+            messages.error(request, 'That username is already taken.')
+            return redirect('account:settings')
+        user.username = username
+
+    user.first_name = first_name
+    user.last_name = last_name
+    user.Age = int(age) if age.isdigit() else None
+
+    if birthday:
+        from datetime import date
+        try:
+            user.birthday = date.fromisoformat(birthday)
+        except ValueError:
+            pass
+
+    user.save()
+    messages.success(request, 'Profile updated successfully.')
+    return redirect('account:settings')
+
+
+@login_required
+@require_http_methods(["POST"])
+def settings_security(request):
+    user = request.user
+    current = request.POST.get('current_password', '')
+    new_pw  = request.POST.get('new_password', '')
+    confirm = request.POST.get('confirm_password', '')
+
+    import re
+    if not user.check_password(current):
+        messages.error(request, 'Current password is incorrect.')
+        return redirect('account:settings')
+    if new_pw != confirm:
+        messages.error(request, 'New passwords do not match.')
+        return redirect('account:settings')
+    if len(new_pw) < 8 or not re.search(r'[A-Z]', new_pw) or not re.search(r'[a-z]', new_pw) \
+            or not re.search(r'\d', new_pw) or not re.search(r'[!@#$%^&*(),.?":{}|<>]', new_pw):
+        messages.error(request, 'Password does not meet strength requirements.')
+        return redirect('account:settings')
+
+    user.set_password(new_pw)
+    user.save()
+    from django.contrib.auth import update_session_auth_hash
+    update_session_auth_hash(request, user)
+    messages.success(request, 'Password updated successfully.')
+    return redirect('account:settings')
+
+
+@login_required
+@require_http_methods(["POST"])
+def settings_account(request):
+    user = request.user
+    user.Driver_Status = request.POST.get('driver_status') == 'on'
+    user.save()
+    messages.success(request, 'Preferences saved.')
+    return redirect('account:settings')
+
+
+@login_required
+@require_http_methods(["POST"])
+def delete_account(request):
+    user = request.user
+    logout(request)
+    user.delete()
+    messages.success(request, 'Your account has been permanently deleted.')
+    return redirect('home')

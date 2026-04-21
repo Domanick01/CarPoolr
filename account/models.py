@@ -10,6 +10,7 @@ class User(AbstractUser):
     Driver_Status = models.BooleanField(default=False)
     Verified_Status = models.BooleanField(default=False)
     Rating = models.FloatField(null=True, blank=True)
+    birthday = models.DateField(null=True, blank=True)
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
