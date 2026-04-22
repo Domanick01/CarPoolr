@@ -12,6 +12,10 @@ def ride_list(request):
         departure_time__gte=timezone.now()
     )
 
+    # Filter by school — only show rides from drivers at the same school
+    if request.user.is_authenticated and request.user.school:
+        rides = rides.filter(driver__school=request.user.school)
+
     search_query = request.GET.get("search")
     max_price = request.GET.get("max_price")
     date = request.GET.get("date")
