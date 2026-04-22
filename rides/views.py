@@ -8,10 +8,14 @@ from .models import Ride, RideRequest, Review
 
 
 def ride_list(request):
-    rides = Ride.objects.select_related("driver").all()
+    rides = Ride.objects.select_related("driver").filter(
+        departure_time__gte=timezone.now()
+    )
 
     search_query = request.GET.get("search")
-    ride_type = request.GET.get("type")
+    max_price = request.GET.get("max_price")
+    date = request.GET.get("date")
+    sort = request.GET.get("sort")
 
     if search_query:
         rides = rides.filter(
@@ -20,12 +24,21 @@ def ride_list(request):
             destination__icontains=search_query
         )
 
-    if ride_type:
-        rides = rides.filter(ride_type=ride_type)
+    if max_price:
+        rides = rides.filter(price__lte=max_price)
 
-    return render(request, "ride_list.html", {"rides": rides, "search_query": search_query, "selected_type": ride_type})
+    if date:
+        rides = rides.filter(departure_time__date=date)
 
+    if sort in ["price", "-price", "departure_time", "-departure_time"]:
+        rides = rides.order_by(sort)
 
+    return render(request, "ride_list.html", {
+        "rides": rides,
+        "search_query": search_query,
+    })
+    
+    
 @login_required
 @require_http_methods(["GET", "POST"])
 def ride_create(request):
