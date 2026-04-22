@@ -5,11 +5,12 @@
 {% block styles %}
 <style>
     .profile-container {
-        max-width: 1200px;
+        max-width: 1100px;
         margin: 60px auto;
         padding: 0 48px;
     }
 
+    /* ── Header ── */
     .profile-header {
         display: flex;
         justify-content: space-between;
@@ -23,90 +24,295 @@
         color: #000;
     }
 
+    .profile-subtitle {
+        color: #666;
+        margin-top: 6px;
+        font-size: 15px;
+    }
+
     .settings-link {
         color: #dc2626;
         text-decoration: none;
         font-weight: 500;
+        font-size: 14px;
+        border: 1.5px solid #dc2626;
+        padding: 8px 16px;
+        border-radius: 8px;
+        transition: all 0.2s;
     }
 
-    .settings-link:hover { text-decoration: underline; }
+    .settings-link:hover {
+        background: #dc2626;
+        color: #fff;
+    }
 
+    /* ── Stats ── */
     .stats-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-        gap: 24px;
-        margin-bottom: 40px;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+        margin-bottom: 32px;
     }
 
     .stat-card {
         background: #fff;
-        padding: 32px;
-        border-radius: 12px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        padding: 28px 24px;
+        border-radius: 16px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.07);
         text-align: center;
+        border: 2px solid transparent;
+        transition: border-color 0.2s, transform 0.2s;
+    }
+
+    .stat-card:hover {
+        border-color: #fecaca;
+        transform: translateY(-2px);
     }
 
     .stat-number {
         font-size: 40px;
-        font-weight: 700;
+        font-weight: 800;
         color: #dc2626;
-        margin-bottom: 8px;
+        margin-bottom: 6px;
+        line-height: 1;
     }
 
     .stat-label {
-        font-size: 16px;
-        color: #666;
+        font-size: 14px;
+        color: #888;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
     }
 
-    .calendar-card,
+    /* ── Two-column layout ── */
+    .main-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+        margin-bottom: 24px;
+    }
+
+    /* ── Cards ── */
+    .card {
+        background: #fff;
+        padding: 28px;
+        border-radius: 16px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+    }
+
+    .card h3 {
+        font-size: 18px;
+        font-weight: 700;
+        margin-bottom: 20px;
+        color: #000;
+    }
+
+    /* ── Calendar ── */
+    .calendar-nav {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 16px;
+    }
+
+    .calendar-nav button {
+        background: none;
+        border: none;
+        font-size: 20px;
+        cursor: pointer;
+        color: #555;
+        padding: 4px 10px;
+        border-radius: 6px;
+        transition: background 0.15s;
+    }
+
+    .calendar-nav button:hover { background: #f3f4f6; }
+
+    .calendar-month-label {
+        font-weight: 700;
+        font-size: 16px;
+        color: #000;
+    }
+
+    .calendar-grid {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 4px;
+        text-align: center;
+    }
+
+    .cal-day-name {
+        font-size: 11px;
+        font-weight: 600;
+        color: #aaa;
+        text-transform: uppercase;
+        padding-bottom: 6px;
+    }
+
+    .cal-day {
+        aspect-ratio: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 8px;
+        font-size: 13px;
+        font-weight: 500;
+        color: #444;
+        cursor: default;
+        transition: background 0.15s;
+        position: relative;
+    }
+
+    .cal-day.empty { background: none; }
+
+    .cal-day.today {
+        border: 2px solid #dc2626;
+        color: #dc2626;
+        font-weight: 700;
+    }
+
+    .cal-day.drove {
+        background: #dc2626;
+        color: #fff;
+        font-weight: 700;
+    }
+
+    .cal-day.passenger {
+        background: #bbf7d0;
+        color: #15803d;
+        font-weight: 700;
+    }
+
+    .cal-day.both {
+        background: linear-gradient(135deg, #dc2626 50%, #16a34a 50%);
+        color: #fff;
+        font-weight: 700;
+    }
+
+    .cal-day:not(.empty):hover {
+        opacity: 0.85;
+        cursor: pointer;
+    }
+
+    /* Legend */
+    .cal-legend {
+        display: flex;
+        gap: 16px;
+        margin-top: 16px;
+        flex-wrap: wrap;
+    }
+
+    .legend-item {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 12px;
+        color: #555;
+    }
+
+    .legend-dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 3px;
+        flex-shrink: 0;
+    }
+
+    /* ── Reviews ── */
     .reviews-card {
         background: #fff;
-        padding: 32px;
-        border-radius: 12px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-        margin-bottom: 40px;
+        padding: 28px;
+        border-radius: 16px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+        margin-bottom: 24px;
     }
 
-    .calendar-card h3,
-    .reviews-card h3 { margin-bottom: 16px; }
+    .reviews-card h3 {
+        font-size: 18px;
+        font-weight: 700;
+        margin-bottom: 20px;
+        color: #000;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
 
-    .calendar-input {
-        padding: 12px;
-        border-radius: 8px;
-        border: 1px solid #ddd;
-        font-size: 16px;
+    .reviews-count-badge {
+        font-size: 13px;
+        font-weight: 600;
+        background: #f3f4f6;
+        color: #555;
+        padding: 3px 10px;
+        border-radius: 999px;
     }
 
     .review-item {
         padding: 16px 0;
-        border-bottom: 1px solid #eee;
+        border-bottom: 1px solid #f0f0f0;
     }
 
     .review-item:last-child { border-bottom: none; }
 
     .review-meta {
+        font-size: 13px;
+        color: #888;
+        margin-bottom: 6px;
+    }
+
+    .star-display {
+        color: #f59e0b;
+        font-size: 16px;
+        margin-bottom: 6px;
+        letter-spacing: 1px;
+    }
+
+    .review-comment {
         font-size: 14px;
-        color: #666;
-        margin-bottom: 6px;
+        color: #444;
+        line-height: 1.5;
     }
 
-    .review-rating {
-        font-weight: 600;
-        margin-bottom: 6px;
+    .no-reviews {
+        color: #aaa;
+        font-style: italic;
+        font-size: 14px;
     }
 
+    /* ── Motivation ── */
     .motivation-card {
         background: #000;
         color: #fff;
-        padding: 32px;
-        border-radius: 12px;
+        padding: 28px 32px;
+        border-radius: 16px;
         text-align: center;
         font-size: 18px;
         font-weight: 500;
+        line-height: 1.5;
+        margin-bottom: 24px;
     }
 
-    @media (max-width: 768px) {
-        .profile-container { padding: 0 24px; }
+    /* ── Tooltip ── */
+    .tooltip-box {
+        display: none;
+        position: fixed;
+        background: #1f2937;
+        color: #fff;
+        font-size: 12px;
+        padding: 6px 10px;
+        border-radius: 6px;
+        pointer-events: none;
+        z-index: 999;
+        white-space: nowrap;
+    }
+
+    @media (max-width: 900px) {
+        .main-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 600px) {
+        .profile-container { padding: 0 20px; margin-top: 32px; }
+        .profile-title { font-size: 26px; }
+        .stats-grid { grid-template-columns: 1fr 1fr; }
     }
 </style>
 {% endblock %}
@@ -114,19 +320,25 @@
 {% block content %}
 <div class="profile-container">
 
+    <!-- Header -->
     <div class="profile-header">
-        <div class="profile-title">
-            {% if is_own_profile %}
-                Your Dashboard
-            {% else %}
-                {{ profile_user.username }}'s Profile
-            {% endif %}
+        <div>
+            <div class="profile-title">
+                {% if is_own_profile %}Your Dashboard{% else %}{{ profile_user.username }}'s Profile{% endif %}
+            </div>
+            <div class="profile-subtitle">
+                {% if profile_user.first_name %}{{ profile_user.first_name }} {{ profile_user.last_name }} · {% endif %}
+                Member since {{ profile_user.date_joined|date:"M Y" }}
+                {% if profile_user.Driver_Status %} · 🚗 Driver{% endif %}
+                {% if profile_user.Verified_Status %} · ✅ Verified{% endif %}
+            </div>
         </div>
         {% if is_own_profile %}
-            <a href="#" class="settings-link">Account Settings</a>
+            <a href="{% url 'account:settings' %}" class="settings-link">⚙ Settings</a>
         {% endif %}
     </div>
 
+    <!-- Stats -->
     <div class="stats-grid">
         <div class="stat-card">
             <div class="stat-number">{{ offered_rides }}</div>
@@ -138,51 +350,220 @@
         </div>
         <div class="stat-card">
             <div class="stat-number">
-                {% if average_rating is not None %}
-                    {{ average_rating }}
-                {% else %}
-                    —
-                {% endif %}
+                {% if average_rating is not None %}{{ average_rating }}★{% else %}—{% endif %}
             </div>
-            <div class="stat-label">Average Rating</div>
+            <div class="stat-label">Avg Rating</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">{{ received_reviews_count }}</div>
+            <div class="stat-label">Reviews Received</div>
         </div>
     </div>
 
-    {% if is_own_profile %}
-        <div class="calendar-card">
-            <h3>Your Schedule</h3>
-            <input type="date" class="calendar-input">
-        </div>
-    {% endif %}
+    <!-- Calendar + Info grid -->
+    <div class="main-grid">
 
+        <!-- Calendar -->
+        <div class="card">
+            <h3>🗓 Ride Calendar</h3>
+            <div class="calendar-nav">
+                <button onclick="changeMonth(-1)">&#8249;</button>
+                <span class="calendar-month-label" id="monthLabel"></span>
+                <button onclick="changeMonth(1)">&#8250;</button>
+            </div>
+            <div class="calendar-grid" id="calGrid"></div>
+            <div class="cal-legend">
+                <div class="legend-item">
+                    <div class="legend-dot" style="background:#dc2626;"></div> Drove
+                </div>
+                <div class="legend-item">
+                    <div class="legend-dot" style="background:#bbf7d0; border:1px solid #16a34a;"></div> Passenger
+                </div>
+                <div class="legend-item">
+                    <div class="legend-dot" style="background:linear-gradient(135deg,#dc2626 50%,#16a34a 50%);"></div> Both
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick info card -->
+        <div class="card">
+            <h3>👤 About</h3>
+            <div style="display:flex; flex-direction:column; gap:14px; font-size:15px; color:#444;">
+                <div>
+                    <span style="font-weight:600; color:#000;">Username</span><br>
+                    {{ profile_user.username }}
+                </div>
+                {% if profile_user.first_name %}
+                <div>
+                    <span style="font-weight:600; color:#000;">Full Name</span><br>
+                    {{ profile_user.first_name }} {{ profile_user.last_name }}
+                </div>
+                {% endif %}
+                {% if is_own_profile and profile_user.Age %}
+                <div>
+                    <span style="font-weight:600; color:#000;">Age</span><br>
+                    {{ profile_user.Age }}
+                </div>
+                {% endif %}
+                {% if is_own_profile and profile_user.Phone_Number %}
+                <div>
+                    <span style="font-weight:600; color:#000;">Phone</span><br>
+                    {{ profile_user.Phone_Number }}
+                </div>
+                {% endif %}
+                <div>
+                    <span style="font-weight:600; color:#000;">Driver Status</span><br>
+                    {% if profile_user.Driver_Status %}✅ Active Driver{% else %}🚶 Passenger Only{% endif %}
+                </div>
+                <div>
+                    <span style="font-weight:600; color:#000;">Verified</span><br>
+                    {% if profile_user.Verified_Status %}✅ Verified{% else %}⏳ Not Verified{% endif %}
+                </div>
+                <div>
+                    <span style="font-weight:600; color:#000;">Written Reviews</span><br>
+                    {{ written_reviews_count }} review{{ written_reviews_count|pluralize }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reviews -->
     <div class="reviews-card">
-        <h3>{% if is_own_profile %}Recent Reviews{% else %}Reviews for {{ profile_user.username }}{% endif %}</h3>
+        <h3>
+            {% if is_own_profile %}Recent Reviews{% else %}Reviews for {{ profile_user.username }}{% endif %}
+            <span class="reviews-count-badge">{{ received_reviews_count }} total</span>
+        </h3>
 
         {% if recent_received_reviews %}
             {% for review in recent_received_reviews %}
                 <div class="review-item">
                     <div class="review-meta">
-                        From {{ review.reviewer.username }} on {{ review.created_at|date:"M d, Y" }}
+                        From <strong>{{ review.reviewer.username }}</strong>
+                        &nbsp;·&nbsp; {{ review.created_at|date:"M d, Y" }}
+                        &nbsp;·&nbsp; {{ review.ride.pickup_location }} → {{ review.ride.destination }}
                     </div>
-                    <div class="review-rating">Rating: {{ review.rating }}/5</div>
-                    <div>{{ review.comment|default:"No comment provided." }}</div>
+                    <div class="star-display">
+                        {% for i in "12345" %}
+                            {% if forloop.counter <= review.rating %}★{% else %}☆{% endif %}
+                        {% endfor %}
+                        <span style="font-size:13px; color:#888; margin-left:4px;">{{ review.rating }}/5</span>
+                    </div>
+                    <div class="review-comment">{{ review.comment|default:"No comment provided." }}</div>
                 </div>
             {% endfor %}
         {% else %}
-            <p>No reviews yet.</p>
+            <p class="no-reviews">No reviews yet.</p>
         {% endif %}
     </div>
 
+    <!-- Motivation (own profile only) -->
     {% if is_own_profile %}
-        <div class="motivation-card">
-            <span id="quote"></span>
-        </div>
+    <div class="motivation-card">
+        <span id="quote"></span>
+    </div>
     {% endif %}
 
 </div>
 
-{% if is_own_profile %}
+<!-- Tooltip -->
+<div class="tooltip-box" id="tooltip"></div>
+
 <script>
+    // ── Ride date data from Django ──
+    const droveDates     = new Set({{ drove_dates|safe }});
+    const passengerDates = new Set({{ passenger_dates|safe }});
+
+    // ── Calendar state ──
+    const today = new Date();
+    let currentYear  = today.getFullYear();
+    let currentMonth = today.getMonth();
+
+    const MONTHS = ["January","February","March","April","May","June",
+                    "July","August","September","October","November","December"];
+    const DAYS   = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+
+    function isoDate(y, m, d) {
+        return `${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    }
+
+    function renderCalendar() {
+        document.getElementById('monthLabel').textContent =
+            `${MONTHS[currentMonth]} ${currentYear}`;
+
+        const grid = document.getElementById('calGrid');
+        grid.innerHTML = '';
+
+        // Day name headers
+        DAYS.forEach(d => {
+            const el = document.createElement('div');
+            el.className = 'cal-day-name';
+            el.textContent = d;
+            grid.appendChild(el);
+        });
+
+        const firstDay = new Date(currentYear, currentMonth, 1).getDay();
+        const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+
+        // Empty cells before first day
+        for (let i = 0; i < firstDay; i++) {
+            const el = document.createElement('div');
+            el.className = 'cal-day empty';
+            grid.appendChild(el);
+        }
+
+        // Day cells
+        for (let day = 1; day <= daysInMonth; day++) {
+            const iso  = isoDate(currentYear, currentMonth, day);
+            const drove = droveDates.has(iso);
+            const pass  = passengerDates.has(iso);
+            const isToday = (
+                day === today.getDate() &&
+                currentMonth === today.getMonth() &&
+                currentYear  === today.getFullYear()
+            );
+
+            const el = document.createElement('div');
+            el.className = 'cal-day';
+            el.textContent = day;
+
+            if (drove && pass)       el.classList.add('both');
+            else if (drove)          el.classList.add('drove');
+            else if (pass)           el.classList.add('passenger');
+            if (isToday)             el.classList.add('today');
+
+            // Tooltip
+            if (drove || pass) {
+                let tip = '';
+                if (drove && pass) tip = '🚗 Drove + 🎒 Passenger';
+                else if (drove)    tip = '🚗 Drove a ride';
+                else               tip = '🎒 Took a ride';
+                el.addEventListener('mousemove', e => showTooltip(e, tip));
+                el.addEventListener('mouseleave', hideTooltip);
+            }
+
+            grid.appendChild(el);
+        }
+    }
+
+    function changeMonth(delta) {
+        currentMonth += delta;
+        if (currentMonth > 11) { currentMonth = 0;  currentYear++; }
+        if (currentMonth < 0)  { currentMonth = 11; currentYear--; }
+        renderCalendar();
+    }
+
+    // ── Tooltip ──
+    const tooltip = document.getElementById('tooltip');
+    function showTooltip(e, text) {
+        tooltip.textContent = text;
+        tooltip.style.display = 'block';
+        tooltip.style.left = (e.clientX + 12) + 'px';
+        tooltip.style.top  = (e.clientY - 28) + 'px';
+    }
+    function hideTooltip() { tooltip.style.display = 'none'; }
+
+    // ── Motivation quotes ──
+    {% if is_own_profile %}
     const quotes = [
         "Every mile shared makes the journey lighter.",
         "Drive forward. Progress always.",
@@ -190,9 +571,10 @@
         "Consistency builds momentum.",
         "You're going places — literally."
     ];
+    document.getElementById("quote").textContent =
+        quotes[Math.floor(Math.random() * quotes.length)];
+    {% endif %}
 
-    const randomIndex = Math.floor(Math.random() * quotes.length);
-    document.getElementById("quote").textContent = quotes[randomIndex];
+    renderCalendar();
 </script>
-{% endif %}
 {% endblock %}
