@@ -247,8 +247,12 @@
                 <div class="card">
                     <div class="ride-info">
                         Driver: <span>{{ req.ride.driver.username }}</span><br>
-                        From <strong>{{ req.ride.pickup_location }}</strong>
-                        to <strong>{{ req.ride.destination }}</strong><br>
+                        <a href="{% url 'rides:detail' req.ride.pk %}" style="text-decoration: none; color: #000;">
+                            From <strong>{{ req.ride.pickup_location }}</strong>
+                            to <strong>{{ req.ride.destination }}</strong>
+                            <span style="color: #dc2626; font-size: 13px; font-weight: 600;"> → View details</span>
+
+                        </a><br>
                         Departure: {{ req.ride.departure_time|date:"M d, Y H:i" }}
                         <br>
                         <span class="seats-badge">
