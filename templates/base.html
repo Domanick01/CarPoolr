@@ -306,6 +306,9 @@
                                 <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" focusable="false">
                                     <path d="M8 16a2 2 0 0 0 1.985-1.75h-3.97A2 2 0 0 0 8 16Zm5-5V7a5 5 0 0 0-4-4.9V1a1 1 0 0 0-2 0v1.1A5 5 0 0 0 3 7v4l-1.2 1.6A1 1 0 0 0 2.6 14h10.8a1 1 0 0 0 .8-1.4L13 11Zm-8.5 1 .5-.67V7a3 3 0 1 1 6 0v4.33l.5.67h-7Z"/>
                                 </svg>
+                                {% if pending_requests_count > 0 %}
+                                    <span style="position: absolute; top: 6px; right: 6px; background: #dc2626; color: #fff; border-radius: 999px; padding: 1px 6px; font-size: 11px; font-weight: 700; line-height: 1.4;">{{ pending_requests_count }}</span>
+                                {% endif %}
                             </a>
                         {% endif %}
                         <div class="nav-item dropdown">
