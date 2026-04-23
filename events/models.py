@@ -1,7 +1,15 @@
+from django.conf import settings
 from django.db import models
 from location_field.models.plain import PlainLocationField
 
 class Event(models.Model):
+    creator = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='events',
+        null=True,
+        blank=True
+    )
     title = models.CharField(max_length=200)
     description = models.TextField()
     location = PlainLocationField(based_fields='address', zoom=7)
@@ -13,4 +21,3 @@ class Event(models.Model):
 
     class Meta:
         ordering = ['-date']
-

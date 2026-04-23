@@ -293,6 +293,7 @@
             <div class="collapse navbar-collapse" id="siteNavbar">
                 <div class="navbar-nav align-items-lg-center center-nav">
                     <a class="nav-link btn-signin" href="{% url 'rides:list' %}">Rides</a>
+                    <a class="nav-link btn-signin" href="{% url 'events:list' %}">Events</a>
                     {% if user.is_authenticated %}
                         <a class="nav-link btn-signin" href="{% url 'rides:my_rides' %}">My Rides</a>
                     {% endif %}
