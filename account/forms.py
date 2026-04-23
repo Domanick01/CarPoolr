@@ -4,6 +4,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.core.exceptions import ValidationError
 from django.core.validators import EmailValidator
 from .models import User 
+from datetime import date
 
 class CustomUserRegistrationForm(UserCreationForm):
     """
@@ -54,13 +55,15 @@ class CustomUserRegistrationForm(UserCreationForm):
             'placeholder': 'Phone number (optional)'
         })
     )
+
     
-    age = forms.IntegerField(
-        required=False,
-        widget=forms.NumberInput(attrs={
-            'class' : 'form-control',
-            'placeholder' : 'Age'
-        })
+    birthday = forms.DateField(
+        required=True,
+        widget=forms.DateInput(attrs={
+            'class': 'form-control',
+            'type': 'date'
+        }),
+        label='Birthday'
     )
     
     driver_status = forms.ChoiceField(
@@ -79,7 +82,7 @@ class CustomUserRegistrationForm(UserCreationForm):
         model = User
         fields = [
             'username', 'email', 'first_name', 'last_name',
-            'driver_status', 'phone_number', 'password1', 'password2', 'school'
+            'driver_status', 'phone_number', 'password1', 'password2', 'school', 'birthday'
         ]
     
     def __init__(self, *args, **kwargs):
@@ -189,15 +192,31 @@ class CustomUserRegistrationForm(UserCreationForm):
             )
 
         return phone
-    
+    def clean(self):
+        cleaned_data = super().clean()
+        birthday = cleaned_data.get('birthday')
+        driver_status = cleaned_data.get('driver_status')
+
+        if birthday:
+            today = date.today()
+            age = (today - birthday).days // 365
+
+            if age < 16:
+                self.add_error('birthday', "You must be at least 16 years old to register as a passenger.")
+
+            if driver_status == 'True' and age < 18:
+                self.add_error('birthday', "You must be at least 18 years old to register as a driver.")
+
+        return cleaned_data
+        
     def save(self, commit=True):
         '''Saves user with hashed password'''
         user = super().save(commit=False)  # get the user instance
         user.email = self.cleaned_data['email']
-        user.Age = self.cleaned_data.get('age')
         user.Phone_Number = self.cleaned_data.get('phone_number') or None
         user.Driver_Status = self.cleaned_data.get('driver_status') == 'True'
-        user.school = self.cleaned_data.get('school')     
+        user.school = self.cleaned_data.get('school')    
+        user.birthday = self.cleaned_data.get('birthday') 
         if commit:
             user.save()  # saves the user including the hashed password
         return user

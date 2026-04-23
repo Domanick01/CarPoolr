@@ -399,10 +399,10 @@
                     {{ profile_user.first_name }} {{ profile_user.last_name }}
                 </div>
                 {% endif %}
-                {% if is_own_profile and profile_user.Age %}
+                {% if is_own_profile and calculated_age %}
                 <div>
                     <span style="font-weight:600; color:#000;">Age</span><br>
-                    {{ profile_user.Age }}
+                    {{ calculated_age }} years old
                 </div>
                 {% endif %}
                 {% if is_own_profile and profile_user.Phone_Number %}
