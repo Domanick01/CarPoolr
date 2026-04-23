@@ -88,8 +88,7 @@
             <h1>Rides</h1>
             <p class="subtitle">Browse available rides or post one if you're driving.</p>
         </div>
-        <a class="btn-signup" href="{% url 'rides:create' %}">Post a ride</a>
-    </div>
+    <a href="{% url 'rides:create' %}" style="background-color: #dc2626; color: #fff; padding: 10px 24px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 16px;">Post a ride</a>    </div>
 
 <form method="GET" style="margin-bottom: 20px; display: flex; gap: 10px; flex-wrap: wrap;">
 
@@ -145,10 +144,17 @@
                     <div class="meta-row">
                         <span class="pill">Depart: {{ ride.departure_time }}</span>
                         <span class="pill">Price: ${{ ride.price }}</span>
+                        {% if ride.seats_available == 0 %}
+                            <span class="pill" style="background-color:#fee2e2; color:#991b1b;">Ride is full</span>
+                        {% else %}
+                            <span class="pill">{{ ride.seats_available }} seat{{ ride.seats_available|pluralize }} left</span>
+                        {% endif %}
                     </div>
                     <div class="driver">Driver: {{ ride.driver.username }}</div>
+                    {% if ride.event %}
+                        <div class="driver">Event: <a href="{% url 'events:detail' ride.event.pk %}" style="color: #dc2626; text-decoration: none;">{{ ride.event.title }}</a></div>
+                    {% endif %}
                 </div>
-
                 {% if user == ride.driver %}
                     <div style="margin-top: 12px; display: flex; gap: 8px;">
                         <a href="{% url 'rides:edit' ride.pk %}" class="pill" style="text-decoration: none;">Edit</a>

@@ -46,11 +46,17 @@ def ride_list(request):
 @login_required
 @require_http_methods(["GET", "POST"])
 def ride_create(request):
-    # Drivers-only rule (uses your custom User field Driver_Status)
     is_driver = getattr(request.user, "Driver_Status", False)
     if not is_driver:
         messages.error(request, "Only drivers can post rides.")
         return redirect("rides:list")
+
+    event_pk = request.GET.get('event')
+    event = None
+
+    if event_pk:
+        from events.models import Event
+        event = Event.objects.filter(pk=event_pk).first()
 
     if request.method == "POST":
         form = RideForm(request.POST)
@@ -59,11 +65,18 @@ def ride_create(request):
             ride.driver = request.user
             ride.save()
             messages.success(request, "Ride posted!")
+            if ride.event:
+                return redirect("events:detail", pk=ride.event.pk)
             return redirect("rides:list")
     else:
-        form = RideForm()
+        initial = {}
+        if event:
+            initial['event'] = event.pk
+            initial['pickup_location'] = event.location
+            initial['destination'] = event.title
+        form = RideForm(initial=initial)
 
-    return render(request, "ride_form.html", {"form": form})
+    return render(request, "ride_form.html", {"form": form, "event": event})
 
 
 @login_required
