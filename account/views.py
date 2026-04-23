@@ -86,19 +86,16 @@ def profile_view(request, username=None):
         'reviewer', 'ride'
     ).order_by('-created_at')[:5]
 
-    # Build a set of dates where the user drove a ride
     drove_dates = set(
         Ride.objects.filter(driver=profile_user)
         .values_list('departure_time__date', flat=True)
     )
 
-    # Build a set of dates where the user was a passenger
     passenger_dates = set(
         RideRequest.objects.filter(passenger=profile_user, status='accepted')
         .values_list('ride__departure_time__date', flat=True)
     )
 
-    # Convert to sorted ISO string lists for JS
     drove_dates_list = sorted([d.isoformat() for d in drove_dates])
     passenger_dates_list = sorted([d.isoformat() for d in passenger_dates])
 
@@ -205,8 +202,22 @@ def settings_account(request):
 @login_required
 @require_http_methods(["POST"])
 def delete_account(request):
+    # Server-side confirmation check — must type DELETE in the modal
+    confirmation = request.POST.get('confirm_delete', '')
+    if confirmation != 'DELETE':
+        messages.error(request, 'Account deletion was not confirmed correctly.')
+        return redirect('account:settings')
+
     user = request.user
+
+    # Log out BEFORE deleting so the session is cleared cleanly
     logout(request)
+
+    # Delete the user — Django cascades to related objects per your model/FK setup
     user.delete()
+
+    # Use the messages framework on the new (anonymous) session after logout
+    # This works because logout() flushes the old session but the response
+    # still sets a fresh session cookie that persists through the redirect.
     messages.success(request, 'Your account has been permanently deleted.')
     return redirect('home')

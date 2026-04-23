@@ -546,13 +546,23 @@
         <p>Type <strong>DELETE</strong> to confirm.</p>
         <form method="POST" action="{% url 'account:delete_account' %}">
             {% csrf_token %}
-            <input type="text" id="deleteConfirmInput"
+            <!--
+                The visible input is for UX only.
+                On input, we mirror its value into the hidden field that
+                actually gets submitted so the server can verify it.
+            -->
+            <input type="text"
+                   id="deleteConfirmInput"
                    placeholder="Type DELETE to confirm"
-                   autocomplete="off">
+                   autocomplete="off"
+                   oninput="syncConfirmField(this.value)">
+            <!-- This hidden field is what the view reads as confirm_delete -->
+            <input type="hidden" name="confirm_delete" id="confirmDeleteHidden" value="">
             <div class="modal-buttons">
-                <button type="submit" class="btn-confirm-delete"
-                        id="deleteSubmitBtn" disabled
-                        onclick="return validateDelete()">
+                <button type="submit"
+                        class="btn-confirm-delete"
+                        id="deleteSubmitBtn"
+                        disabled>
                     Yes, Delete Everything
                 </button>
                 <button type="button" class="btn-cancel-modal"
@@ -607,17 +617,17 @@
     function closeDeleteModal() {
         document.getElementById('deleteModal').classList.remove('open');
         document.getElementById('deleteConfirmInput').value = '';
+        document.getElementById('confirmDeleteHidden').value = '';
         document.getElementById('deleteSubmitBtn').disabled = true;
     }
 
-    document.getElementById('deleteConfirmInput').addEventListener('input', function () {
-        document.getElementById('deleteSubmitBtn').disabled = this.value !== 'DELETE';
-    });
-
-    function validateDelete() {
-        return document.getElementById('deleteConfirmInput').value === 'DELETE';
+    // Mirror the visible input into the hidden field and gate the submit button
+    function syncConfirmField(val) {
+        document.getElementById('confirmDeleteHidden').value = val;
+        document.getElementById('deleteSubmitBtn').disabled = (val !== 'DELETE');
     }
 
+    // Close modal if user clicks the dark backdrop
     window.addEventListener('click', function(e) {
         const modal = document.getElementById('deleteModal');
         if (e.target === modal) closeDeleteModal();
