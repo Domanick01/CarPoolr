@@ -7,6 +7,7 @@ from django.views.decorators.http import require_http_methods
 from django.shortcuts import render, redirect, get_object_or_404
 from .forms import CustomUserRegistrationForm
 from rides.models import Ride, RideRequest, Review
+from datetime import date
 
 def success_view(request):
     return render(request, 'account/success.html')
@@ -97,6 +98,12 @@ def profile_view(request, username=None):
         RideRequest.objects.filter(passenger=profile_user, status='accepted')
         .values_list('ride__departure_time__date', flat=True)
     )
+    
+    birthday = profile_user.birthday
+    calculated_age = None
+    if birthday:
+        today = date.today()
+        calculated_age = (today - birthday).days // 365
 
     # Convert to sorted ISO string lists for JS
     drove_dates_list = sorted([d.isoformat() for d in drove_dates])
@@ -114,6 +121,7 @@ def profile_view(request, username=None):
         'recent_received_reviews': recent_received_reviews,
         'drove_dates': drove_dates_list,
         'passenger_dates': passenger_dates_list,
+        'calculated_age' : calculated_age
     }
 
     return render(request, 'account/profile.html', context)
