@@ -52,6 +52,11 @@ def ride_create(request):
         return redirect("rides:list")
 
     event_pk = request.GET.get('event')
+    event = None
+
+    if event_pk:
+        from events.models import Event
+        event = Event.objects.filter(pk=event_pk).first()
 
     if request.method == "POST":
         form = RideForm(request.POST)
@@ -65,11 +70,13 @@ def ride_create(request):
             return redirect("rides:list")
     else:
         initial = {}
-        if event_pk:
-            initial['event'] = event_pk
+        if event:
+            initial['event'] = event.pk
+            initial['pickup_location'] = event.location
+            initial['destination'] = event.title
         form = RideForm(initial=initial)
 
-    return render(request, "ride_form.html", {"form": form})
+    return render(request, "ride_form.html", {"form": form, "event": event})
 
 
 @login_required
