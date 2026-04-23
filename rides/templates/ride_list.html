@@ -2,180 +2,93 @@
 
 {% block title %}Rides - CarPoolr{% endblock %}
 
-{% block styles %}
-<style>
-    .page {
-        padding: 48px;
-        max-width: 1400px;
-        margin: 0 auto;
-    }
-
-    .header {
-        display: flex;
-        align-items: flex-end;
-        justify-content: space-between;
-        gap: 16px;
-        margin-bottom: 20px;
-    }
-
-    h1 {
-        font-size: 40px;
-        font-weight: 700;
-        color: #000;
-        line-height: 1.1;
-    }
-
-    .subtitle {
-        margin-top: 10px;
-        color: #666;
-        line-height: 1.5;
-    }
-
-    .card {
-        background: #fff;
-        border-radius: 12px;
-        padding: 20px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        margin-top: 16px;
-        <span class="pill">{{ ride.get_ride_type_display }}</span>
-    }
-
-    .ride-title {
-        font-size: 18px;
-        font-weight: 700;
-        color: #000;
-        margin-bottom: 10px;
-    }
-
-    .ride-meta {
-        display: grid;
-        grid-template-columns: 1fr;
-        gap: 8px;
-        color: #333;
-    }
-
-    .meta-row {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 12px;
-        align-items: center;
-    }
-
-    .pill {
-        background-color: #f5f5f5;
-        border-radius: 999px;
-        padding: 8px 12px;
-        font-size: 14px;
-        color: #333;
-    }
-
-    .driver {
-        color: #666;
-        font-size: 14px;
-    }
-
-    @media (max-width: 768px) {
-        .page { padding: 24px; }
-        h1 { font-size: 32px; }
-        .header { align-items: flex-start; flex-direction: column; }
-    }
-</style>
-{% endblock %}
-
 {% block content %}
-<main class="page">
-    <div class="header">
+<main class="page-shell">
+    <div class="d-flex flex-column flex-md-row align-items-md-end justify-content-between gap-3 mb-4">
         <div>
-            <h1>Rides</h1>
-            <p class="subtitle">Browse available rides or post one if you're driving.</p>
+            <h1 class="display-6 fw-bold mb-1">Rides</h1>
+            <p class="text-muted mb-0">Browse available rides or post one if you're driving.</p>
         </div>
-        <a class="btn-signup" href="{% url 'rides:create' %}">Post a ride</a>
+        <a class="btn btn-brand" href="{% url 'rides:create' %}">Post a ride</a>
     </div>
 
-    <form method="GET" style="margin-bottom: 20px; display: flex; gap: 10px; flex-wrap: wrap;">
-<form method="GET" style="margin-bottom: 20px; display: flex; gap: 10px; flex-wrap: wrap;">
+    <form method="get" class="card app-card p-3 mb-4">
+        <div class="row g-3 align-items-end">
+            <div class="col-md-4">
+                <label for="search" class="form-label">Search</label>
+                <input id="search" class="form-control" type="text" name="search" placeholder="Search by location" value="{{ request.GET.search }}">
+            </div>
+            <div class="col-md-2">
+                <label for="category" class="form-label">Category</label>
+                <select id="category" class="form-select" name="category">
+                    <option value="">All</option>
+                    <option value="theme_park">Theme Park</option>
+                    <option value="sports">Sports Game</option>
+                    <option value="concert">Concert</option>
+                    <option value="school">School</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label for="max_price" class="form-label">Max Price</label>
+                <input id="max_price" class="form-control" type="number" name="max_price" placeholder="Max" value="{{ request.GET.max_price }}">
+            </div>
+            <div class="col-md-2">
+                <label for="date" class="form-label">Date</label>
+                <input id="date" class="form-control" type="date" name="date" value="{{ request.GET.date }}">
+            </div>
+            <div class="col-md-2">
+                <label for="sort" class="form-label">Sort</label>
+                <select id="sort" class="form-select" name="sort">
+                    <option value="">Sort By</option>
+                    <option value="price">Price Low to High</option>
+                    <option value="-price">Price High to Low</option>
+                    <option value="departure_time">Earliest Departure</option>
+                    <option value="-departure_time">Latest Departure</option>
+                </select>
+            </div>
+            <div class="col-12">
+                <button type="submit" class="btn btn-brand">Apply filters</button>
+            </div>
+        </div>
+    </form>
 
-    <!-- Search -->
-    <input
-        type="text"
-        name="search"
-        placeholder="Search by location..."
-        value="{{ request.GET.search }}"
-        style="padding: 10px; border-radius: 8px; border: 1px solid #ccc; flex: 1;"
-    >
+    <div class="d-grid gap-3">
+        {% if rides %}
+            {% for ride in rides %}
+                <section class="card app-card p-4">
+                    <div class="d-flex flex-column flex-md-row justify-content-between gap-3">
+                        <div>
+                            <h2 class="h5 fw-bold mb-2">
+                                <a href="{% url 'rides:detail' ride.pk %}" class="text-decoration-none text-dark">
+                                    {{ ride.pickup_location }} to {{ ride.destination }}
+                                </a>
+                            </h2>
+                            <div class="d-flex flex-wrap gap-2 mb-2">
+                                <span class="badge rounded-pill text-bg-light">Depart: {{ ride.departure_time }}</span>
+                                <span class="badge rounded-pill text-bg-light">Price: ${{ ride.price }}</span>
+                            </div>
+                            <p class="text-muted mb-0">Driver: {{ ride.driver.username }}</p>
+                        </div>
 
-    <!-- Category -->
-    <select name="category" style="padding: 10px; border-radius: 8px;">
-        <option value="">All Categories</option>
-        <option value="theme_park">Theme Park</option>
-        <option value="sports">Sports Game</option>
-        <option value="concert">Concert</option>
-        <option value="school">School</option>
-        <option value="other">Other</option>
-    </select>
-
-    <!-- Max Price -->
-    <input
-        type="number"
-        name="max_price"
-        placeholder="Max Price"
-        value="{{ request.GET.max_price }}"
-        style="padding: 10px; border-radius: 8px; border: 1px solid #ccc; width: 120px;"
-    >
-
-    <!-- Date -->
-    <input
-        type="date"
-        name="date"
-        value="{{ request.GET.date }}"
-        style="padding: 10px; border-radius: 8px; border: 1px solid #ccc;"
-    >
-
-    <!-- Sort -->
-    <select name="sort" style="padding: 10px; border-radius: 8px;">
-        <option value="">Sort By</option>
-        <option value="price">Price (Low → High)</option>
-        <option value="-price">Price (High → Low)</option>
-        <option value="departure_time">Earliest Departure</option>
-        <option value="-departure_time">Latest Departure</option>
-    </select>
-
-    <button type="submit" class="btn-signup">Apply</button>
-</form>
-
-    {% if rides %}
-        {% for ride in rides %}
-            <section class="card">
-                <div class="ride-title">
-                    <a href="{% url 'rides:detail' ride.pk %}" style="text-decoration: none; color: #000;">
-                        {{ ride.pickup_location }} → {{ ride.destination }}
-                    </a>
-                </div>
-
-                <div class="ride-meta">
-                    <div class="meta-row">
-                        <span class="pill">Depart: {{ ride.departure_time }}</span>
-                        <span class="pill">Price: ${{ ride.price }}</span>
+                        {% if user == ride.driver %}
+                            <div class="d-flex gap-2 align-items-start">
+                                <a href="{% url 'rides:edit' ride.pk %}" class="btn btn-outline-dark btn-sm">Edit</a>
+                                <form method="post" action="{% url 'rides:delete' ride.pk %}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-outline-danger btn-sm">Delete</button>
+                                </form>
+                            </div>
+                        {% endif %}
                     </div>
-                    <div class="driver">Driver: {{ ride.driver.username }}</div>
-                </div>
-
-                {% if user == ride.driver %}
-                    <div style="margin-top: 12px; display: flex; gap: 8px;">
-                        <a href="{% url 'rides:edit' ride.pk %}" class="pill" style="text-decoration: none;">Edit</a>
-                        <form method="post" action="{% url 'rides:delete' ride.pk %}">
-                            {% csrf_token %}
-                            <button type="submit" class="pill" style="border: none; cursor: pointer; background-color: #dc2626; color: #fff;">Delete</button>
-                        </form>
-                    </div>
-                {% endif %}
+                </section>
+            {% endfor %}
+        {% else %}
+            <section class="card app-card p-4">
+                <h2 class="h5 fw-bold mb-1">No rides posted yet</h2>
+                <p class="text-muted mb-0">Be the first to post one.</p>
             </section>
-        {% endfor %}
-    {% else %}
-        <section class="card">
-            <div class="ride-title">No rides posted yet</div>
-            <p class="subtitle" style="margin-top: 8px;">Be the first to post one.</p>
-        </section>
-    {% endif %}
+        {% endif %}
+    </div>
 </main>
 {% endblock %}

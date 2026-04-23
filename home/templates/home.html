@@ -5,270 +5,83 @@
 
 {% block styles %}
 <style>
-    .hero {
-        padding: 72px 48px;
-        max-width: 1400px;
-        margin: 0 auto;
-    }
-
-    .hero-layout {
-        display: grid;
-        grid-template-columns: minmax(0, 1.1fr) minmax(320px, 0.9fr);
-        gap: 56px;
-        align-items: center;
-    }
-
-    .hero-content {
-        max-width: 720px;
-    }
-
-    .eyebrow {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        padding: 8px 14px;
-        margin-bottom: 18px;
-        border-radius: 999px;
-        background: rgba(225, 29, 72, 0.10);
-        color: #991b1b;
-        font-size: 13px;
-        font-weight: 700;
-        letter-spacing: 0.02em;
-    }
-
-    h1 {
-        font-size: clamp(42px, 6vw, 68px);
-        line-height: 0.98;
-        letter-spacing: -0.06em;
-        margin-bottom: 18px;
-        color: #0b0b0f;
-    }
-
-    .hero-subtitle {
-        font-size: 18px;
-        color: #5b6270;
-        max-width: 56ch;
-        line-height: 1.6;
-        margin-bottom: 28px;
-    }
-
-    .hero-actions {
-        display: flex;
-        gap: 12px;
-        flex-wrap: wrap;
-        margin-bottom: 24px;
-    }
-
-    .cta-primary,
-    .cta-secondary {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        min-height: 48px;
-        padding: 0 18px;
-        border-radius: 999px;
-        text-decoration: none;
-        font-weight: 700;
-        transition: transform 0.18s ease, background-color 0.18s ease;
-    }
-
-    .cta-primary {
-        background: #e11d48;
-        color: #fff;
-        box-shadow: 0 14px 30px rgba(225, 29, 72, 0.22);
-    }
-
-    .cta-primary:hover {
-        background: #be123c;
-        transform: translateY(-1px);
-    }
-
-    .cta-secondary {
-        background: #111114;
-        color: #fff;
-    }
-
-    .cta-secondary:hover {
-        background: #000;
-        transform: translateY(-1px);
-    }
-
     .hero-image {
         width: 100%;
-        max-width: 560px;
-        border-radius: 28px;
+        border: 1px solid rgba(17, 17, 20, 0.08);
+        border-radius: 8px;
         box-shadow: var(--shadow);
-        border: 1px solid rgba(17, 17, 20, 0.08);
-        object-fit: cover;
         background: #fff;
-    }
-
-    .feature-strip {
-        margin-top: 28px;
-        display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 14px;
-    }
-
-    .feature {
-        background: rgba(255, 255, 255, 0.72);
-        border: 1px solid rgba(17, 17, 20, 0.08);
-        border-radius: 18px;
-        padding: 16px;
-        box-shadow: 0 10px 28px rgba(0,0,0,0.04);
-        backdrop-filter: blur(12px);
-    }
-
-    .feature strong {
-        display: block;
-        margin-bottom: 4px;
-        color: #0b0b0f;
-    }
-
-    .feature span {
-        color: #6b7280;
-        font-size: 14px;
-        line-height: 1.45;
-    }
-
-    /* Quick actions section */
-    .quick-actions {
-        max-width: 1400px;
-        margin: 0 auto 80px auto;
-        padding: 0 48px;
-    }
-
-    .quick-actions h2 {
-        font-size: 28px;
-        font-weight: 700;
-        margin-bottom: 24px;
-        color: #000;
-    }
-
-    .quick-actions-grid {
-        display: flex;
-        gap: 20px;
-        flex-wrap: wrap;
-    }
-
-    .action-card {
-        background: #fff;
-        border-radius: 16px;
-        padding: 32px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-        text-decoration: none;
-        color: #333;
-        display: flex;
-        align-items: center;
-        gap: 20px;
-        flex: 1;
-        min-width: 260px;
-        max-width: 360px;
-        transition: box-shadow 0.2s, transform 0.2s;
-        border: 2px solid transparent;
-    }
-
-    .action-card:hover {
-        box-shadow: 0 8px 24px rgba(0,0,0,0.12);
-        transform: translateY(-2px);
-        border-color: #dc2626;
     }
 
     .action-icon {
         width: 56px;
         height: 56px;
-        border-radius: 14px;
-        background: #fef2f2;
-        display: flex;
+        border-radius: 8px;
+        background: rgba(225, 29, 72, 0.10);
+        color: var(--red);
+        display: inline-flex;
         align-items: center;
         justify-content: center;
-        font-size: 26px;
-        flex-shrink: 0;
-    }
-
-    .action-card-text strong {
-        display: block;
-        font-size: 18px;
-        font-weight: 700;
-        margin-bottom: 4px;
-        color: #000;
-    }
-
-    .action-card-text span {
-        font-size: 14px;
-        color: #888;
-    }
-
-    @media (max-width: 1100px) {
-        .hero-layout {
-            grid-template-columns: 1fr;
-        }
-
-        .hero-image {
-            max-width: 680px;
-        }
-    }
-
-    @media (max-width: 768px) {
-        nav { padding: 16px 24px; }
-        .hero { padding: 48px 24px; }
-        h1 { font-size: 40px; }
-        .search-card { padding: 24px; }
-        .logo { font-size: 24px; }
-        .quick-actions { padding: 0 24px; }
-        .action-card { max-width: 100%; }
+        font-size: 24px;
+        font-weight: 800;
+        flex: 0 0 auto;
     }
 </style>
 {% endblock %}
 
 {% block content %}
-<section class="hero">
-    <div class="hero-layout">
-        <div class="hero-content">
-            <h1>Go anywhere with<br>CarPoolr</h1>
-            <p class="hero-subtitle">
+<main class="page-shell">
+    <section class="row align-items-center g-5 py-md-4">
+        <div class="col-lg-7">
+            <h1 class="display-3 fw-bold lh-1 mb-3">Go anywhere with CarPoolr</h1>
+            <p class="lead text-muted mb-4">
                 Connect with fellow travelers and make every trip more affordable, polished, and easy to use.
             </p>
-
-            <div class="hero-actions">
-                <a href="{% url 'rides:list' %}" class="cta-primary">View rides</a>
-                <a href="{% url 'account:register' %}" class="cta-secondary">Create account</a>
+            <div class="d-flex flex-wrap gap-2">
+                <a href="{% url 'rides:list' %}" class="btn btn-brand btn-lg">View rides</a>
+                {% if not user.is_authenticated %}
+                    <a href="{% url 'account:register' %}" class="btn btn-dark btn-lg">Create account</a>
+                {% endif %}
             </div>
         </div>
 
-        <div>
+        <div class="col-lg-5">
             <img
                 src="{% static 'home/carpoolr-hero.svg' %}"
                 alt="CarPoolr logo illustration"
                 class="hero-image"
-            />
+            >
         </div>
-    </div>
-</section>
+    </section>
 
-{% if user.is_authenticated %}
-<section class="quick-actions">
-    <h2>Welcome back, {{ user.username }} 👋</h2>
-    <div class="quick-actions-grid">
-
-        <a href="{% url 'chat:inbox' %}" class="action-card">
-            <div class="action-icon">💬</div>
-            <div class="action-card-text">
-                <strong>Messages</strong>
-                <span>View your conversations</span>
+    {% if user.is_authenticated %}
+        <section class="mt-5">
+            <h2 class="h3 fw-bold mb-3">Welcome back, {{ user.username }}</h2>
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <a href="{% url 'chat:inbox' %}" class="card app-card h-100 p-4 text-decoration-none text-reset">
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="action-icon">M</div>
+                            <div>
+                                <h3 class="h5 fw-bold mb-1">Messages</h3>
+                                <p class="text-muted mb-0">View your conversations</p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-md-6">
+                    <a href="{% url 'rides:list' %}" class="card app-card h-100 p-4 text-decoration-none text-reset">
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="action-icon">R</div>
+                            <div>
+                                <h3 class="h5 fw-bold mb-1">Browse Rides</h3>
+                                <p class="text-muted mb-0">Find a ride to join</p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
             </div>
-        </a>
-
-        <a href="{% url 'rides:list' %}" class="action-card">
-            <div class="action-icon">🚗</div>
-            <div class="action-card-text">
-                <strong>Browse Rides</strong>
-                <span>Find a ride to join</span>
-            </div>
-        </a>
-
-    </div>
-</section>
-{% endif %}
-
+        </section>
+    {% endif %}
+</main>
 {% endblock %}

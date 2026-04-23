@@ -2,117 +2,45 @@
 
 {% block title %}Notifications - CarPoolr{% endblock %}
 
-{% block styles %}
-<style>
-    .page {
-        padding: 48px;
-        max-width: 800px;
-        margin: 0 auto;
-    }
-
-    h1 {
-        font-size: 40px;
-        font-weight: 700;
-        color: #000;
-        margin-bottom: 24px;
-    }
-
-    .card {
-        background: #fff;
-        border-radius: 12px;
-        padding: 20px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        margin-top: 16px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: 16px;
-        flex-wrap: wrap;
-    }
-
-    .request-info {
-        font-size: 16px;
-        color: #333;
-    }
-
-    .request-info span {
-        font-weight: 600;
-        color: #000;
-    }
-
-    .request-actions {
-        display: flex;
-        gap: 8px;
-    }
-
-    .btn-accept {
-        background-color: #16a34a;
-        color: #fff;
-        border: none;
-        padding: 10px 20px;
-        font-size: 14px;
-        font-weight: 600;
-        cursor: pointer;
-        border-radius: 8px;
-        transition: background-color 0.3s;
-    }
-
-    .btn-accept:hover { background-color: #15803d; }
-
-    .btn-deny {
-        background-color: #dc2626;
-        color: #fff;
-        border: none;
-        padding: 10px 20px;
-        font-size: 14px;
-        font-weight: 600;
-        cursor: pointer;
-        border-radius: 8px;
-        transition: background-color 0.3s;
-    }
-
-    .btn-deny:hover { background-color: #b91c1c; }
-
-    .empty {
-        color: #666;
-        margin-top: 16px;
-    }
-
-    @media (max-width: 768px) {
-        .page { padding: 24px; }
-        h1 { font-size: 28px; }
-        .card { flex-direction: column; align-items: flex-start; }
-    }
-</style>
-{% endblock %}
-
 {% block content %}
-<main class="page">
-    <h1>Notifications</h1>
+<main class="page-shell page-shell-narrow">
+    <h1 class="display-6 fw-bold mb-4">Notifications</h1>
 
-    {% if pending_requests %}
-        {% for req in pending_requests %}
-            <div class="card">
-                <div class="request-info">
-                    <span>{{ req.passenger.username }}</span> wants to join your ride
-                    <strong>{{ req.ride.pickup_location }} → {{ req.ride.destination }}</strong>
-                    on {{ req.ride.departure_time }}
-                    <p>Seats left: {{ req.ride.seats_available }} / {{ req.ride.total_seats }}</p>
-                </div>
-                <div class="request-actions">
-                    <form method="post" action="{% url 'rides:request_respond' req.pk %}">
-                        {% csrf_token %}
-                        <button type="submit" name="action" value="accept" class="btn-accept">Accept</button>
-                    </form>
-                    <form method="post" action="{% url 'rides:request_respond' req.pk %}">
-                        {% csrf_token %}
-                        <button type="submit" name="action" value="deny" class="btn-deny">Deny</button>
-                    </form>
-                </div>
-            </div>
-        {% endfor %}
-    {% else %}
-        <p class="empty">No pending requests.</p>
-    {% endif %}
+    <div class="d-grid gap-3">
+        {% if pending_requests %}
+            {% for req in pending_requests %}
+                <section class="card app-card p-4">
+                    <div class="d-flex flex-column flex-md-row justify-content-between gap-3">
+                        <div>
+                            <p class="mb-2">
+                                <strong>{{ req.passenger.username }}</strong> wants to join your ride.
+                            </p>
+                            <div class="text-muted">
+                                {{ req.ride.pickup_location }} to {{ req.ride.destination }}<br>
+                                {{ req.ride.departure_time }}
+                            </div>
+                            <span class="badge rounded-pill text-bg-light mt-2">
+                                Seats left: {{ req.ride.seats_available }} / {{ req.ride.total_seats }}
+                            </span>
+                        </div>
+                        <div class="d-flex gap-2 align-items-start">
+                            <form method="post" action="{% url 'rides:request_respond' req.pk %}">
+                                {% csrf_token %}
+                                <button type="submit" name="action" value="accept" class="btn btn-success">Accept</button>
+                            </form>
+                            <form method="post" action="{% url 'rides:request_respond' req.pk %}">
+                                {% csrf_token %}
+                                <button type="submit" name="action" value="deny" class="btn btn-outline-danger">Deny</button>
+                            </form>
+                        </div>
+                    </div>
+                </section>
+            {% endfor %}
+        {% else %}
+            <section class="card app-card p-4">
+                <p class="text-muted mb-0">No pending requests.</p>
+            </section>
+        {% endif %}
+    </div>
 </main>
 {% endblock %}

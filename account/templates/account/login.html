@@ -2,122 +2,33 @@
 
 {% block title %}CarPoolr - Login{% endblock %}
 
-{% block styles %}
-<style>
-    .page {
-        min-height: calc(100vh - 80px);
-        display: grid;
-        place-items: center;
-        padding: 32px 24px;
-    }
-
-    .login-container {
-        width: 100%;
-        max-width: 440px;
-        background: rgba(255, 255, 255, 0.88);
-        backdrop-filter: blur(18px);
-        border: 1px solid rgba(17, 17, 20, 0.08);
-        border-radius: 24px;
-        box-shadow: var(--shadow);
-        padding: 32px;
-    }
-
-    h2 {
-        font-size: 32px;
-        line-height: 1.1;
-        letter-spacing: -0.04em;
-        margin-bottom: 10px;
-        color: #0b0b0f;
-    }
-
-    .subtitle {
-        color: #6b7280;
-        margin-bottom: 24px;
-    }
-
-    .form-group {
-        margin-bottom: 16px;
-    }
-
-    label {
-        display: block;
-        margin-bottom: 8px;
-        color: #374151;
-        font-size: 14px;
-        font-weight: 700;
-    }
-
-    input {
-        width: 100%;
-        padding: 14px 16px;
-        border: 1px solid rgba(17, 17, 20, 0.10);
-        border-radius: 14px;
-        background: #fff;
-        outline: none;
-        font-size: 15px;
-        transition: border-color 0.18s ease, box-shadow 0.18s ease;
-    }
-
-    input:focus {
-        border-color: rgba(225, 29, 72, 0.55);
-        box-shadow: 0 0 0 4px rgba(225, 29, 72, 0.12);
-    }
-
-    button {
-        width: 100%;
-        min-height: 48px;
-        background: #e11d48;
-        color: #fff;
-        border: none;
-        border-radius: 14px;
-        font-size: 15px;
-        font-weight: 800;
-        cursor: pointer;
-        transition: background-color 0.18s ease, transform 0.18s ease;
-    }
-
-    button:hover {
-        background: #be123c;
-        transform: translateY(-1px);
-    }
-
-    .error {
-        color: #be123c;
-        margin-bottom: 14px;
-        padding: 12px 14px;
-        border-radius: 12px;
-        background: rgba(225, 29, 72, 0.08);
-    }
-</style>
-{% endblock %}
-
 {% block content %}
-<div class="page">
-    <div class="login-container">
-        <h2>Welcome back</h2>
-        <p class="subtitle">Sign in to keep your rides moving.</p>
+<main class="page-shell page-shell-narrow">
+    <div class="card app-card p-4 p-md-5 mx-auto" style="max-width: 440px;">
+        <h1 class="h2 fw-bold mb-2">Welcome back</h1>
+        <p class="text-muted mb-4">Sign in to keep your rides moving.</p>
 
         {% if messages %}
             {% for message in messages %}
-                <div class="error">{{ message }}</div>
+                <div class="alert alert-danger" role="alert">{{ message }}</div>
             {% endfor %}
         {% endif %}
 
-        <form method="post">
+        <form method="post" class="d-grid gap-3">
             {% csrf_token %}
 
-            <div class="form-group">
-                <label for="username">Username</label>
-                <input type="text" id="username" name="username" required>
+            <div>
+                <label for="username" class="form-label fw-semibold">Username</label>
+                <input type="text" id="username" name="username" class="form-control form-control-lg" required>
             </div>
 
-            <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" id="password" name="password" required>
+            <div>
+                <label for="password" class="form-label fw-semibold">Password</label>
+                <input type="password" id="password" name="password" class="form-control form-control-lg" required>
             </div>
 
-            <button type="submit">Login</button>
+            <button type="submit" class="btn btn-brand btn-lg w-100">Login</button>
         </form>
     </div>
-</div>
+</main>
 {% endblock %}

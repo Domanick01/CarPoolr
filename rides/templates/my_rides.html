@@ -1,338 +1,112 @@
 {% extends 'base.html' %}
- 
+
 {% block title %}My Rides - CarPoolr{% endblock %}
- 
-{% block styles %}
-<style>
-    .page {
-        padding: 48px;
-        max-width: 800px;
-        margin: 0 auto;
-    }
- 
-    h1 {
-        font-size: 40px;
-        font-weight: 700;
-        color: #000;
-        margin-bottom: 24px;
-    }
- 
-    h2 {
-        font-size: 24px;
-        font-weight: 700;
-        margin-bottom: 12px;
-    }
- 
-    .card {
-        background: #fff;
-        border-radius: 16px;
-        padding: 24px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        margin-top: 16px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: 16px;
-        flex-wrap: wrap;
-        transition: box-shadow 0.2s, transform 0.2s;
-        border: 2px solid transparent;
-    }
- 
-    .card:hover {
-        box-shadow: 0 6px 20px rgba(0,0,0,0.12);
-        transform: translateY(-2px);
-        border-color: #f0f0f0;
-    }
- 
-    .ride-info {
-        font-size: 16px;
-        color: #333;
-        line-height: 1.7;
-    }
- 
-    .ride-info span {
-        font-weight: 600;
-        color: #000;
-    }
- 
-    .ride-meta {
-        font-size: 14px;
-        color: #888;
-        margin-top: 4px;
-    }
- 
-    .ride-actions {
-        display: flex;
-        gap: 10px;
-        align-items: center;
-        flex-wrap: wrap;
-    }
- 
-    .btn-cancel {
-        background-color: #fff;
-        color: #dc2626;
-        border: 2px solid #dc2626;
-        padding: 9px 18px;
-        font-size: 14px;
-        font-weight: 600;
-        cursor: pointer;
-        border-radius: 10px;
-        transition: all 0.2s;
-    }
- 
-    .btn-cancel:hover {
-        background-color: #dc2626;
-        color: #fff;
-    }
- 
-    .btn-chat {
-        display: inline-flex;
-        align-items: center;
-        gap: 7px;
-        background: linear-gradient(135deg, #dc2626, #ef4444);
-        color: #fff;
-        border: none;
-        padding: 10px 20px;
-        font-size: 14px;
-        font-weight: 600;
-        cursor: pointer;
-        border-radius: 10px;
-        text-decoration: none;
-        box-shadow: 0 4px 12px rgba(220,38,38,0.25);
-        transition: transform 0.2s, box-shadow 0.2s;
-    }
- 
-    .btn-chat:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 18px rgba(220,38,38,0.35);
-    }
- 
-    .btn-chat:active { transform: scale(0.97); }
- 
-    .btn-chat .chat-icon {
-        font-size: 16px;
-    }
- 
-    .seats-badge {
-        display: inline-block;
-        background: #f3f4f6;
-        color: #555;
-        font-size: 13px;
-        font-weight: 600;
-        padding: 4px 12px;
-        border-radius: 999px;
-        margin-top: 6px;
-    }
- 
-    .btn-review {
-        background-color: #16a34a;
-        color: #fff;
-        border: none;
-        padding: 8px 16px;
-        font-size: 14px;
-        font-weight: 600;
-        cursor: pointer;
-        border-radius: 8px;
-        text-decoration: none;
-        display: inline-block;
-    }
- 
-    .btn-review:hover { background-color: #15803d; }
- 
-    .empty {
-        color: #666;
-        margin-top: 16px;
-        font-style: italic;
-    }
- 
-    .section {
-        margin-top: 32px;
-    }
- 
-    /* Modal styling */
-    .modal-overlay {
-        position: fixed;
-        top: 0; left: 0;
-        width: 100%; height: 100%;
-        background: rgba(0,0,0,0.45);
-        display: none;
-        justify-content: center;
-        align-items: center;
-        z-index: 1000;
-        backdrop-filter: blur(2px);
-        animation: fadeIn 0.2s ease;
-    }
- 
-    @keyframes fadeIn {
-        from { opacity: 0; }
-        to   { opacity: 1; }
-    }
- 
-    .modal {
-        background: #fff;
-        padding: 32px;
-        border-radius: 20px;
-        max-width: 420px;
-        width: 90%;
-        box-shadow: 0 12px 40px rgba(0,0,0,0.18);
-        text-align: center;
-        animation: slideUp 0.25s ease;
-    }
- 
-    @keyframes slideUp {
-        from { transform: translateY(20px); opacity: 0; }
-        to   { transform: translateY(0); opacity: 1; }
-    }
- 
-    .modal-icon {
-        font-size: 44px;
-        margin-bottom: 12px;
-    }
- 
-    .modal h2 {
-        margin-bottom: 10px;
-        font-size: 22px;
-        font-weight: 800;
-        color: #000;
-    }
- 
-    .modal p {
-        margin-bottom: 28px;
-        color: #666;
-        font-size: 15px;
-        line-height: 1.5;
-    }
- 
-    .modal-buttons {
-        display: flex;
-        justify-content: center;
-        gap: 12px;
-    }
- 
-    .modal-buttons button,
-    .modal-buttons .btn-confirm-link {
-        padding: 11px 24px;
-        font-weight: 700;
-        border-radius: 10px;
-        border: none;
-        cursor: pointer;
-        font-size: 15px;
-        transition: all 0.2s;
-        text-decoration: none;
-        display: inline-block;
-    }
- 
-    .btn-confirm {
-        background-color: #dc2626;
-        color: #fff;
-    }
- 
-    .btn-confirm:hover { background-color: #b91c1c; }
- 
-    .btn-cancel-modal {
-        background-color: #f3f4f6;
-        color: #333;
-    }
- 
-    .btn-cancel-modal:hover { background-color: #e5e7eb; }
- 
-    @media (max-width: 768px) {
-        .page { padding: 24px; }
-        h1 { font-size: 28px; }
-        .card { flex-direction: column; align-items: flex-start; }
-        .ride-actions { width: 100%; }
-        .btn-chat, .btn-cancel { flex: 1; text-align: center; justify-content: center; }
-    }
-</style>
-{% endblock %}
- 
+
 {% block content %}
-<main class="page">
-    <h1>My Rides</h1>
- 
-    <div class="section">
-        <h2>Upcoming Rides</h2>
-        {% if upcoming_rides %}
-            {% for req in upcoming_rides %}
-                <div class="card">
-                    <div class="ride-info">
-                        Driver: <span>{{ req.ride.driver.username }}</span><br>
-                        From <strong>{{ req.ride.pickup_location }}</strong>
-                        to <strong>{{ req.ride.destination }}</strong><br>
-                        Departure: {{ req.ride.departure_time|date:"M d, Y H:i" }}
-                        <br>
-                        <span class="seats-badge">
-                            🪑 {{ req.ride.seats_available }} / {{ req.ride.total_seats }} seats available
-                        </span>
+<main class="page-shell page-shell-narrow">
+    <h1 class="display-6 fw-bold mb-4">My Rides</h1>
+
+    <section class="mb-5">
+        <h2 class="h4 fw-bold mb-3">Upcoming Rides</h2>
+        <div class="d-grid gap-3">
+            {% if upcoming_rides %}
+                {% for req in upcoming_rides %}
+                    <div class="card app-card p-4">
+                        <div class="d-flex flex-column flex-md-row justify-content-between gap-3">
+                            <div>
+                                <p class="mb-2">Driver: <strong>{{ req.ride.driver.username }}</strong></p>
+                                <div class="text-muted mb-2">
+                                    From <strong>{{ req.ride.pickup_location }}</strong>
+                                    to <strong>{{ req.ride.destination }}</strong><br>
+                                    Departure: {{ req.ride.departure_time|date:"M d, Y H:i" }}
+                                </div>
+                                <span class="badge rounded-pill text-bg-light">
+                                    {{ req.ride.seats_available }} / {{ req.ride.total_seats }} seats available
+                                </span>
+                            </div>
+                            <div class="d-flex flex-wrap gap-2 align-items-start">
+                                <a href="{% url 'chat:conversation' req.ride.driver.id %}" class="btn btn-brand">Message Driver</a>
+                                <button
+                                    type="button"
+                                    class="btn btn-outline-danger"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#cancelModal"
+                                    data-request-pk="{{ req.pk }}"
+                                    data-driver-name="{{ req.ride.driver.username }}"
+                                >
+                                    Cancel Ride
+                                </button>
+                            </div>
+                        </div>
                     </div>
-                    <div class="ride-actions">
-                        <a href="{% url 'chat:conversation' req.ride.driver.id %}" class="btn-chat">
-                            <span class="chat-icon">💬</span> Message Driver
-                        </a>
-                        <button class="btn-cancel" onclick="openModal({{ req.pk }}, '{{ req.ride.driver.username }}')">Cancel Ride</button>
+                {% endfor %}
+            {% else %}
+                <p class="text-muted">No upcoming rides.</p>
+            {% endif %}
+        </div>
+    </section>
+
+    <section>
+        <h2 class="h4 fw-bold mb-3">Past Rides</h2>
+        <div class="d-grid gap-3">
+            {% if past_rides %}
+                {% for req in past_rides %}
+                    <div class="card app-card p-4">
+                        <div class="d-flex flex-column flex-md-row justify-content-between gap-3">
+                            <div>
+                                <p class="mb-2">Driver: <strong>{{ req.ride.driver.username }}</strong></p>
+                                <div class="text-muted">
+                                    From <strong>{{ req.ride.pickup_location }}</strong>
+                                    to <strong>{{ req.ride.destination }}</strong><br>
+                                    Departure: {{ req.ride.departure_time|date:"M d, Y H:i" }}
+                                </div>
+                            </div>
+                            <div>
+                                <a class="btn btn-success" href="{% url 'rides:leave_review' req.pk %}">Leave a review</a>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            {% endfor %}
-        {% else %}
-            <p class="empty">No upcoming rides.</p>
-        {% endif %}
-    </div>
- 
-    <div class="section">
-        <h2>Past Rides</h2>
-        {% if past_rides %}
-            {% for req in past_rides %}
-                <div class="card">
-                    <div class="ride-info">
-                        Driver: <span>{{ req.ride.driver.username }}</span><br>
-                        From <strong>{{ req.ride.pickup_location }}</strong>
-                        to <strong>{{ req.ride.destination }}</strong><br>
-                        Departure: {{ req.ride.departure_time|date:"M d, Y H:i" }}
-                    </div>
-                    <div class="ride-actions">
-                        <a class="btn-review" href="{% url 'rides:leave_review' req.pk %}">Leave a review</a>
-                    </div>
-                </div>
-            {% endfor %}
-        {% else %}
-            <p class="empty">No past rides.</p>
-        {% endif %}
-    </div>
+                {% endfor %}
+            {% else %}
+                <p class="text-muted">No past rides.</p>
+            {% endif %}
+        </div>
+    </section>
 </main>
- 
-<!-- Cancel Modal -->
-<div id="cancelModal" class="modal-overlay">
-    <div class="modal">
-        <div class="modal-icon">🚗</div>
-        <h2>Cancel Ride?</h2>
-        <p id="modal-text"></p>
-        <div class="modal-buttons">
-            <form id="modal-form" method="post" action="">
-                {% csrf_token %}
-                <button type="submit" class="btn-confirm">Yes, Cancel</button>
-            </form>
-            <button class="btn-cancel-modal" onclick="closeModal()">Keep Ride</button>
+
+<div class="modal fade" id="cancelModal" tabindex="-1" aria-labelledby="cancelModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title h5" id="cancelModalLabel">Cancel Ride?</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p id="modal-text" class="mb-0"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-dark" data-bs-dismiss="modal">Keep Ride</button>
+                <form id="modal-form" method="post" action="">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">Yes, Cancel</button>
+                </form>
+            </div>
         </div>
     </div>
 </div>
- 
+
 <script>
-    const modal = document.getElementById('cancelModal');
+    const cancelModal = document.getElementById('cancelModal');
     const modalText = document.getElementById('modal-text');
     const modalForm = document.getElementById('modal-form');
- 
-    function openModal(requestPk, driverName) {
-        modal.style.display = 'flex';
+
+    cancelModal.addEventListener('show.bs.modal', event => {
+        const button = event.relatedTarget;
+        const requestPk = button.getAttribute('data-request-pk');
+        const driverName = button.getAttribute('data-driver-name');
+
         modalText.textContent = `Are you sure you want to cancel your ride with ${driverName}? This action cannot be undone.`;
         modalForm.action = `{% url 'rides:cancel_ride' 0 %}`.replace('/0/', `/${requestPk}/`);
-    }
- 
-    function closeModal() {
-        modal.style.display = 'none';
-    }
- 
-    window.onclick = function(e) {
-        if (e.target === modal) closeModal();
-    }
+    });
 </script>
 {% endblock %}

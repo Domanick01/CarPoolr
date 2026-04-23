@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'bootstrap5',
     'account', # Week 1 for login system
     'home',
     'phonenumber_field', # This is being used in the user model (This was a seperate pip install)

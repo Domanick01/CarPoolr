@@ -2,184 +2,86 @@
 
 {% block title %}{{ profile_user.username }} - CarPoolr{% endblock %}
 
-{% block styles %}
-<style>
-    .profile-container {
-        max-width: 1200px;
-        margin: 60px auto;
-        padding: 0 48px;
-    }
-
-    .profile-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 40px;
-    }
-
-    .profile-title {
-        font-size: 36px;
-        font-weight: 700;
-        color: #000;
-    }
-
-    .settings-link {
-        color: #dc2626;
-        text-decoration: none;
-        font-weight: 500;
-    }
-
-    .settings-link:hover { text-decoration: underline; }
-
-    .stats-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-        gap: 24px;
-        margin-bottom: 40px;
-    }
-
-    .stat-card {
-        background: #fff;
-        padding: 32px;
-        border-radius: 12px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-        text-align: center;
-    }
-
-    .stat-number {
-        font-size: 40px;
-        font-weight: 700;
-        color: #dc2626;
-        margin-bottom: 8px;
-    }
-
-    .stat-label {
-        font-size: 16px;
-        color: #666;
-    }
-
-    .calendar-card,
-    .reviews-card {
-        background: #fff;
-        padding: 32px;
-        border-radius: 12px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-        margin-bottom: 40px;
-    }
-
-    .calendar-card h3,
-    .reviews-card h3 { margin-bottom: 16px; }
-
-    .calendar-input {
-        padding: 12px;
-        border-radius: 8px;
-        border: 1px solid #ddd;
-        font-size: 16px;
-    }
-
-    .review-item {
-        padding: 16px 0;
-        border-bottom: 1px solid #eee;
-    }
-
-    .review-item:last-child { border-bottom: none; }
-
-    .review-meta {
-        font-size: 14px;
-        color: #666;
-        margin-bottom: 6px;
-    }
-
-    .review-rating {
-        font-weight: 600;
-        margin-bottom: 6px;
-    }
-
-    .motivation-card {
-        background: #000;
-        color: #fff;
-        padding: 32px;
-        border-radius: 12px;
-        text-align: center;
-        font-size: 18px;
-        font-weight: 500;
-    }
-
-    @media (max-width: 768px) {
-        .profile-container { padding: 0 24px; }
-    }
-</style>
-{% endblock %}
-
 {% block content %}
-<div class="profile-container">
-
-    <div class="profile-header">
-        <div class="profile-title">
-            {% if is_own_profile %}
-                Your Dashboard
-            {% else %}
-                {{ profile_user.username }}'s Profile
-            {% endif %}
+<main class="page-shell">
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+        <div>
+            <h1 class="display-6 fw-bold mb-1">
+                {% if is_own_profile %}
+                    Your Dashboard
+                {% else %}
+                    {{ profile_user.username }}'s Profile
+                {% endif %}
+            </h1>
+            <p class="text-muted mb-0">Ride activity, schedule, and recent reviews.</p>
         </div>
         {% if is_own_profile %}
-            <a href="#" class="settings-link">Account Settings</a>
+            <a href="#" class="btn btn-outline-dark">Account Settings</a>
         {% endif %}
     </div>
 
-    <div class="stats-grid">
-        <div class="stat-card">
-            <div class="stat-number">{{ offered_rides }}</div>
-            <div class="stat-label">Rides Offered</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-number">{{ taken_rides }}</div>
-            <div class="stat-label">Rides Taken</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-number">
-                {% if average_rating is not None %}
-                    {{ average_rating }}
-                {% else %}
-                    —
-                {% endif %}
+    <div class="row g-4 mb-4">
+        <div class="col-md-4">
+            <div class="card app-card h-100 p-4 text-center">
+                <div class="display-5 fw-bold text-brand">{{ offered_rides }}</div>
+                <div class="text-muted">Rides Offered</div>
             </div>
-            <div class="stat-label">Average Rating</div>
+        </div>
+        <div class="col-md-4">
+            <div class="card app-card h-100 p-4 text-center">
+                <div class="display-5 fw-bold text-brand">{{ taken_rides }}</div>
+                <div class="text-muted">Rides Taken</div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card app-card h-100 p-4 text-center">
+                <div class="display-5 fw-bold text-brand">
+                    {% if average_rating is not None %}
+                        {{ average_rating }}
+                    {% else %}
+                        -
+                    {% endif %}
+                </div>
+                <div class="text-muted">Average Rating</div>
+            </div>
         </div>
     </div>
 
     {% if is_own_profile %}
-        <div class="calendar-card">
-            <h3>Your Schedule</h3>
-            <input type="date" class="calendar-input">
-        </div>
+        <section class="card app-card p-4 mb-4">
+            <h2 class="h4 fw-bold mb-3">Your Schedule</h2>
+            <input type="date" class="form-control" style="max-width: 240px;">
+        </section>
     {% endif %}
 
-    <div class="reviews-card">
-        <h3>{% if is_own_profile %}Recent Reviews{% else %}Reviews for {{ profile_user.username }}{% endif %}</h3>
+    <section class="card app-card p-4 mb-4">
+        <h2 class="h4 fw-bold mb-3">
+            {% if is_own_profile %}Recent Reviews{% else %}Reviews for {{ profile_user.username }}{% endif %}
+        </h2>
 
         {% if recent_received_reviews %}
-            {% for review in recent_received_reviews %}
-                <div class="review-item">
-                    <div class="review-meta">
-                        From {{ review.reviewer.username }} on {{ review.created_at|date:"M d, Y" }}
+            <div class="list-group list-group-flush">
+                {% for review in recent_received_reviews %}
+                    <div class="list-group-item px-0">
+                        <div class="small text-muted mb-1">
+                            From {{ review.reviewer.username }} on {{ review.created_at|date:"M d, Y" }}
+                        </div>
+                        <div class="fw-semibold mb-1">Rating: {{ review.rating }}/5</div>
+                        <div>{{ review.comment|default:"No comment provided." }}</div>
                     </div>
-                    <div class="review-rating">Rating: {{ review.rating }}/5</div>
-                    <div>{{ review.comment|default:"No comment provided." }}</div>
-                </div>
-            {% endfor %}
+                {% endfor %}
+            </div>
         {% else %}
-            <p>No reviews yet.</p>
+            <p class="text-muted mb-0">No reviews yet.</p>
         {% endif %}
-    </div>
+    </section>
 
     {% if is_own_profile %}
-        <div class="motivation-card">
-            <span id="quote"></span>
-        </div>
+        <section class="card bg-dark text-white p-4 text-center">
+            <span id="quote" class="fw-semibold"></span>
+        </section>
     {% endif %}
-
-</div>
+</main>
 
 {% if is_own_profile %}
 <script>
@@ -188,7 +90,7 @@
         "Drive forward. Progress always.",
         "Small rides. Big connections.",
         "Consistency builds momentum.",
-        "You're going places — literally."
+        "You're going places - literally."
     ];
 
     const randomIndex = Math.floor(Math.random() * quotes.length);
