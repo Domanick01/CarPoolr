@@ -175,9 +175,7 @@
             {% if user.is_authenticated %}
                 <a class="btn-signin" href="{% url 'rides:my_rides' %}">My Rides</a>
                 <a class="btn-signin" href="{% url 'account:profile' %}">Profile</a>
-                <a class="btn-messages" href="{% url 'chat:inbox' %}">
-                    💬 Messages
-                </a>
+                <a class="btn-signin" href="{% url 'chat:inbox' %}"> Messages</a>
                 {% if user.Driver_Status %}
                     <a class="btn-signin" href="{% url 'rides:notifications' %}">Notifications</a>
                 {% endif %}
