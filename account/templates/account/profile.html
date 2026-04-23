@@ -76,6 +76,7 @@
         {% endif %}
     </section>
 
+    <!-- Motivation (own profile only) -->
     {% if is_own_profile %}
         <section class="card bg-dark text-white p-4 text-center">
             <span id="quote" class="fw-semibold"></span>
@@ -83,8 +84,105 @@
     {% endif %}
 </main>
 
-{% if is_own_profile %}
+<!-- Tooltip -->
+<div class="tooltip-box" id="tooltip"></div>
+
 <script>
+    // ── Ride date data from Django ──
+    const droveDates     = new Set({{ drove_dates|safe }});
+    const passengerDates = new Set({{ passenger_dates|safe }});
+
+    // ── Calendar state ──
+    const today = new Date();
+    let currentYear  = today.getFullYear();
+    let currentMonth = today.getMonth();
+
+    const MONTHS = ["January","February","March","April","May","June",
+                    "July","August","September","October","November","December"];
+    const DAYS   = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+
+    function isoDate(y, m, d) {
+        return `${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    }
+
+    function renderCalendar() {
+        document.getElementById('monthLabel').textContent =
+            `${MONTHS[currentMonth]} ${currentYear}`;
+
+        const grid = document.getElementById('calGrid');
+        grid.innerHTML = '';
+
+        // Day name headers
+        DAYS.forEach(d => {
+            const el = document.createElement('div');
+            el.className = 'cal-day-name';
+            el.textContent = d;
+            grid.appendChild(el);
+        });
+
+        const firstDay = new Date(currentYear, currentMonth, 1).getDay();
+        const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+
+        // Empty cells before first day
+        for (let i = 0; i < firstDay; i++) {
+            const el = document.createElement('div');
+            el.className = 'cal-day empty';
+            grid.appendChild(el);
+        }
+
+        // Day cells
+        for (let day = 1; day <= daysInMonth; day++) {
+            const iso  = isoDate(currentYear, currentMonth, day);
+            const drove = droveDates.has(iso);
+            const pass  = passengerDates.has(iso);
+            const isToday = (
+                day === today.getDate() &&
+                currentMonth === today.getMonth() &&
+                currentYear  === today.getFullYear()
+            );
+
+            const el = document.createElement('div');
+            el.className = 'cal-day';
+            el.textContent = day;
+
+            if (drove && pass)       el.classList.add('both');
+            else if (drove)          el.classList.add('drove');
+            else if (pass)           el.classList.add('passenger');
+            if (isToday)             el.classList.add('today');
+
+            // Tooltip
+            if (drove || pass) {
+                let tip = '';
+                if (drove && pass) tip = '🚗 Drove + 🎒 Passenger';
+                else if (drove)    tip = '🚗 Drove a ride';
+                else               tip = '🎒 Took a ride';
+                el.addEventListener('mousemove', e => showTooltip(e, tip));
+                el.addEventListener('mouseleave', hideTooltip);
+            }
+
+            grid.appendChild(el);
+        }
+    }
+
+    function changeMonth(delta) {
+        currentMonth += delta;
+        if (currentMonth > 11) { currentMonth = 0;  currentYear++; }
+        if (currentMonth < 0)  { currentMonth = 11; currentYear--; }
+        renderCalendar();
+    }
+
+    // ── Tooltip ──
+    const tooltip = document.getElementById('tooltip');
+    function showTooltip(e, text) {
+        tooltip.textContent = text;
+        tooltip.style.display = 'block';
+        tooltip.style.left = (e.clientX + 12) + 'px';
+        tooltip.style.top  = (e.clientY - 28) + 'px';
+    }
+    function hideTooltip() { tooltip.style.display = 'none'; }
+
+    // ── Motivation quotes ──
+    {% if is_own_profile %}
     const quotes = [
         "Every mile shared makes the journey lighter.",
         "Drive forward. Progress always.",
@@ -92,9 +190,11 @@
         "Consistency builds momentum.",
         "You're going places - literally."
     ];
+    document.getElementById("quote").textContent =
+        quotes[Math.floor(Math.random() * quotes.length)];
+    {% endif %}
 
-    const randomIndex = Math.floor(Math.random() * quotes.length);
-    document.getElementById("quote").textContent = quotes[randomIndex];
+    renderCalendar();
 </script>
 {% endif %}
 {% endblock %}

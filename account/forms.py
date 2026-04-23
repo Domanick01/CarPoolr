@@ -68,13 +68,18 @@ class CustomUserRegistrationForm(UserCreationForm):
     widget=forms.Select(attrs={'class': 'form-control'}),
     label="I am a..."
 )
+    school = forms.ChoiceField(
+    choices=[('', 'Select your school')] + User.SCHOOL_CHOICES,
+    required=False,
+    widget=forms.Select(attrs={'class': 'form-control'})
+)
     
     
     class Meta:
         model = User
         fields = [
             'username', 'email', 'first_name', 'last_name',
-            'driver_status', 'phone_number', 'password1', 'password2'
+            'driver_status', 'phone_number', 'password1', 'password2', 'school'
         ]
     
     def __init__(self, *args, **kwargs):
@@ -191,7 +196,8 @@ class CustomUserRegistrationForm(UserCreationForm):
         user.email = self.cleaned_data['email']
         user.Age = self.cleaned_data.get('age')
         user.Phone_Number = self.cleaned_data.get('phone_number') or None
-        user.Driver_Status = self.cleaned_data.get('driver_status') == 'True'        
+        user.Driver_Status = self.cleaned_data.get('driver_status') == 'True'
+        user.school = self.cleaned_data.get('school')     
         if commit:
             user.save()  # saves the user including the hashed password
         return user

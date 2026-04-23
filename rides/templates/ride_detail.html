@@ -22,6 +22,18 @@
             </a>
         </p>
     </section>
+        </div>
+        <div class="driver" style="margin-top: 12px;">
+            Pickup: 
+            <a href="https://www.google.com/maps/search/?api=1&query={{ ride.pickup_location|urlencode }}" 
+               target="_blank" 
+               style="color: #dc2626; text-decoration: none;">
+                {{ ride.pickup_location }} ↗
+            </a>
+        </div>
+        <div class="pill" style="margin-top: 12px;">Seats: {{ ride.seats_taken }} / {{ ride.total_seats }} taken</div>
+        <div class="pill">Seats available: {{ ride.seats_available }}</div>
+    </div>
 
     {% if user.is_authenticated %}
         {% if user == ride.driver %}
